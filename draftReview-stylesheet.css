@@ -1,0 +1,76 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-image: url(images/evaluate.png);
+
+    }
+
+h1 {
+    color: black;
+    text-align: center;
+}
+
+.showHosts{
+	background-color: rgb(230, 230, 86);
+    color: #2e3436;
+    width: 60%;
+    margin-top: 3.5%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 20px;
+}
+.showHosts > table.center {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.showHosts > table {
+	padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.showHosts > th, td{
+	border: 1px solid gray;
+}
+
+.showHosts > button{
+  	margin:auto;
+  	display:block;
+}
+
+.showPresentations{
+	background-color: rgb(230, 230, 86);
+    color: #2e3436;
+    width: 60%;
+    margin-top: 3.5%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 20px;
+}
+
+.showPresentations > table {
+	padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.showPresentations > button{
+	margin:auto;
+  	display:block;
+}
+
+.showPresentations > table.center {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.showPresentations > td, th{
+	border: 1px solid gray;
+}
+
+.button { 
+  width: 150px;
+  padding: 10px; background-color: rgb(230, 230, 86);
+  box-shadow: -8px 8px 10px 3px rgba(0,0,0,0.2);
+  color:#2e3436;
+  border-radius:10px;
+  font-weight:bold; text-decoration:none;	
+ } 

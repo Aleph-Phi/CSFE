@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <script type="text/javascript" src="draftReview-script.js"></script>
+        <link rel="stylesheet" type="text/css" href="draftReview-stylesheet.css">
+
+        <title>TopiConf App</title>
+</head>
+
+<body>
+
+    <h1>TopiConf 2019 - App Prototype</h1>
+
+    <div class="showHosts">
+      <button onclick=showHostTable()>Toon aangemelde sprekers</button>
+    <table id="tableHosts" class="center">
+    	<tr>
+    	</tr>
+    </table>
+    </div>
+    <div class="showPresentations">
+          <button onclick=showPresentationTable()>Toon presentatie voorstellen</button>
+    <table id="tablePresentations" class="center">
+    	<tr>
+    	</tr>
+    </table>
+    </div>
+    
+   <div align="center">
+	<br><br><br><br>
+	  <a href="tileView.html" target=_blank class="button">Beoordeel presentatie voorstellen</a>
+	</div>
+	<div id="reviewScreen">
+      <a href="#" class="cancel">&times;</a>
+	</div>
+	<div id="cover" >
+	</div>
+
+</body>
+</html>

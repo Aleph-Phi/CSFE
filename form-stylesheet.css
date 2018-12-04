@@ -1,0 +1,43 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-image: url(images/topiConf.png);
+
+    }
+
+h1 {
+    color: black;
+    text-align: center;
+}
+
+.presentationProposal {
+    background-color: #F1EA36;
+    color: #2e3436;
+    width: 50%;
+    margin-left: 25%;
+    border-radius: 20px;
+}
+
+.presentationProposal> button{
+	margin-bottom:2px;
+	margin:auto;
+  	display:block;
+}
+
+.presentationProposal > form {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 50px;
+    margin-left: 5%;
+}
+
+.presentationProposal > form > details > input {
+    width:95%
+}
+
+.presentationProposal > form > input {
+    width:95%
+}
+
+.presentationProposal > form > textarea {
+    width:95%
+}

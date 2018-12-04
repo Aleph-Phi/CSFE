@@ -1,0 +1,114 @@
+html, body, .container {
+    background-image: url("images/topiConf.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    height: 100%;
+    min-height: 100%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.menu {
+    background-color: gray;
+    width: 100%;
+    height: auto; 
+}
+
+.menu > button {
+    border: 2px solid white;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.generalButton {
+    border: 2px solid gray;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.acceptButton {
+    border: 2px solid green;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.deniedButton {
+    border: 2px solid red;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reserveButton {
+    border: 2px solid orange;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.deleteButton {
+    border: 2px solid red;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.menu > button:hover {
+    background-image: linear-gradient(#F1EA36, darkgoldenrod);
+    transition: 0.3s;
+}
+
+.container {
+    padding: 50px 200px;
+}
+
+.tileNew {
+    background-color: rgba(0, 0, 0, .6);
+    border-bottom: 5px solid #F1EA36;
+    font-size: 12;
+    width: 150px;
+    height: 100px;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: 5px;
+    display: inline-block;
+}
+
+.tileNew > p {
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tileNew:hover {
+    background-image: linear-gradient(#F1EA36, gray);
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+.form_review {
+    background-color: gray;
+    height: auto;
+    width: 96%;
+    position: absolute;
+    left: 2%;
+    top: 50px;
+}
+
+.form_review > p {
+    color: white;
+    text-align: left;
+    font-weight: bold;
+    margin: 25px;
+}
+
+.form_review > button {
+    margin: 5px;
+}

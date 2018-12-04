@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <script type="text/javascript" src="form-script.js"></script>
+        <link rel="stylesheet" type="text/css" href="form-stylesheet.css">
+        <meta charset="utf-8">
+        <title>TopiConf App</title>
+</head>
+
+<body>
+
+    <h1>TopiConf 2019 - App Prototype</h1>
+
+    <h1>Presentatie aanmeldformulier</h1>
+
+    <div class="presentationProposal">
+
+        <form id="applicationForm" onsubmit=postForm()>
+            Naam:<br>
+            <input type="text" id="form_name" required/><br>
+            E-mailadres:<br>
+            <input type="text" id="form_email" required/><br>
+            Onderwerp:<br>
+            <input type="text" id="form_subject" required/><br>
+            Omschrijving:<br>
+            <textarea rows="5" maxlength="500" id="form_summary" placeholder="Maximaal 500 tekens" required></textarea>
+
+            <details>
+                Type presentatie:<br>
+                <input type="text" id="form_type"><br>
+                Tijdsduur presentatie:<br>
+                    <select id="form_duration">
+                        <option disabled selected value> -- Maak een keuze -- </option>
+                        <option value="15"> 15 minuten </option>
+                        <option value="30"> 30 minuten </option>
+                        <option value="45"> 45 minuten </option>
+                        <option value="60"> 60 minuten </option>
+                        <option value="75"> 75 minuten </option>
+                        <option value="90"> 90 minuten </option>
+                    </select><br>
+                Beroep/achtergrond:<br>
+                <input type="text" id="form_occupation"><br>
+                Geboortedatum:<br>
+                <input type="text" id="form_date_of_birth" placeholder="DD-MM-JJJJ"><br>
+                Geslacht:<br>
+                    <select id="form_gender">
+                        <option disabled selected value> -- Maak een keuze -- </option>
+                        <option value="male">Man</option>
+                        <option value="female">Vrouw</option>
+                        <option value="other">Overig</option>
+                    </select><br>
+                Overige opmerkingen:<br>
+                <input type="text" id="form_requests"><br>
+            </details>
+            <br>
+            <input type="submit" value="Verzenden">
+        </form>
+
+
+    </div>
+</body>
+</html>
