@@ -17,7 +17,7 @@ function showAll() { //test met currentpage multi
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
             for(let j = 0; j < presentationList.length; j++) {
-                    presentationListLoop(presentationList, j);
+                    presentationListLoop(presentationList[j]);
             }
         }
     }
@@ -32,7 +32,7 @@ function showDenied() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
             for(let j = 0; j < presentationList.length; j++) {
-                    presentationListLoop(presentationList, j);
+                    presentationListLoop(presentationList[j]);
             }
         }
     }
@@ -47,7 +47,7 @@ function showAccepted() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
             for(let j = 0; j < presentationList.length; j++) {
-                    presentationListLoop(presentationList, j);
+                    presentationListLoop(presentationList[j]);
             }
         }
     }
@@ -63,7 +63,7 @@ function showUnlabeled() {
             let presentationList = JSON.parse(this.responseText);
             for(let j = 0; j < presentationList.length; j++) {
                 if(presentationList[j].label === "UNLABELED" || presentationList[j].label === "UNDETERMINED" ){
-                    presentationListLoop(presentationList, j);
+                    presentationListLoop(presentationList[j]);
                   }
             }
         }
@@ -79,55 +79,55 @@ function showReserved() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
             for(let j = 0; j < presentationList.length; j++) {
-                    presentationListLoop(presentationList, j);
+                    presentationListLoop(presentationList[j]);
             }
         }
     }
     xhr.send();
 }
 
-function presentationListLoop(presentationList, i) {
+function presentationListLoop(presentationObject) {
         var tile = document.createElement("div");
         tile.classList.add("tileNew");
-        tile.setAttribute("id", presentationList[i].id);
+        tile.setAttribute("id", presentationObject.id);
 
         var id_p = document.createElement("p");
-        id_p.innerHTML = presentationList[i].id;
-        id_p.setAttribute("id","id"+presentationList[i].id);
+        id_p.innerHTML = presentationObject.id;
+        id_p.setAttribute("id","id"+presentationObject.id);
         id_p.style.display = "none";
         tile.appendChild(id_p);
 
         var subject_p = document.createElement("p");
-        subject_p.innerHTML = presentationList[i].subject;
-        subject_p.setAttribute("id","subject"+presentationList[i].id);
+        subject_p.innerHTML = presentationObject.subject;
+        subject_p.setAttribute("id","subject"+presentationObject.id);
         tile.appendChild(subject_p);
 
         var summary_p = document.createElement("p");
-        summary_p.innerHTML = presentationList[i].summary;
-        summary_p.setAttribute("id","summary"+presentationList[i].id);
+        summary_p.innerHTML = presentationObject.summary;
+        summary_p.setAttribute("id","summary"+presentationObject.id);
         summary_p.style.display = "none";
         tile.appendChild(summary_p);
 
         var type_p = document.createElement("p");
-        type_p.innerHTML = presentationList[i].type;
-        type_p.setAttribute("id","type"+presentationList[i].id);
+        type_p.innerHTML = presentationObject.type;
+        type_p.setAttribute("id","type"+presentationObject.id);
         tile.appendChild(type_p);
 
         var duration_p = document.createElement("p");
-        duration_p.innerHTML = presentationList[i].duration;
-        duration_p.setAttribute("id","duration"+presentationList[i].id);
+        duration_p.innerHTML = presentationObject.duration;
+        duration_p.setAttribute("id","duration"+presentationObject.id);
         duration_p.style.display = "none";
         tile.appendChild(duration_p);
 
         var time_of_creation_p = document.createElement("p");
-        time_of_creation_p.innerHTML = presentationList[i].timeOfCreation;
-        time_of_creation_p.setAttribute("id","time_of_creation"+presentationList[i].id);
+        time_of_creation_p.innerHTML = presentationObject.timeOfCreation;
+        time_of_creation_p.setAttribute("id","time_of_creation"+presentationObject.id);
         time_of_creation_p.style.display = "none";
         tile.appendChild(time_of_creation_p);
 
         var label_p = document.createElement("p");
-        label_p.innerHTML = presentationList[i].label;
-        label_p.setAttribute("id","label"+presentationList[i].id);
+        label_p.innerHTML = presentationObject.label;
+        label_p.setAttribute("id","label"+presentationObject.id);
         label_p.style.display = "none";
         tile.appendChild(label_p);
 
@@ -145,12 +145,10 @@ function showFormReview(presentationID) {
 
     let review_window = document.createElement("div");
     review_window.classList.add("form_review");
-
     createButtonsReviewForm(review_window, presentationID);
 
     let id = document.createElement("p");
     id.innerHTML = "ID: "+document.getElementById("id"+presentationID).textContent+"<br>Status: "+document.getElementById("label"+presentationID).textContent;
-    console.log(id);
     review_window.appendChild(id);
 
     let subject = document.createElement("span");
@@ -158,7 +156,6 @@ function showFormReview(presentationID) {
     subjectTextarea.setAttribute("id","subjectTextarea"+presentationID);
     subject.innerHTML = "Onderwerp presentatievoorstel:";
     subjectTextarea.innerHTML = document.getElementById("subject"+presentationID).textContent;
-    console.log(subject);
     review_window.appendChild(subject);
     review_window.appendChild(subjectTextarea);
 
@@ -167,7 +164,6 @@ function showFormReview(presentationID) {
     typeTextarea.setAttribute("id","typeTextarea"+presentationID);
     type.innerHTML = "Type presentatievoorstel:";
     typeTextarea.innerHTML = document.getElementById("type"+presentationID).textContent;
-    console.log(type);
     review_window.appendChild(type);
     review_window.appendChild(typeTextarea);
 
@@ -176,7 +172,6 @@ function showFormReview(presentationID) {
     durationTextarea.setAttribute("id","durationTextarea"+presentationID);
     duration.innerHTML = "Tijdsduur presentatievoorstel:";
     durationTextarea.innerHTML = document.getElementById("duration"+presentationID).textContent;
-    console.log(duration);
     review_window.appendChild(duration);
     review_window.appendChild(durationTextarea);
 
@@ -186,13 +181,13 @@ function showFormReview(presentationID) {
     summaryTextarea.setAttribute("id","summaryTextarea"+presentationID);
     summary.innerHTML = "Samenvatting presentatievoorstel:";
     summaryTextarea.innerHTML = document.getElementById("summary"+presentationID).textContent;
-    console.log(summary);
     review_window.appendChild(summary);
     review_window.appendChild(summaryTextarea);
 
     document.getElementById("form_review").appendChild(review_window);
 }
 
+//Ontwerp knoppen van het reviewForm
 function createButtonsReviewForm(review_window, presentationID) {
     let backButton = document.createElement("button");
     let text_backButton = document.createTextNode("Terug");
@@ -237,6 +232,7 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.onclick = function() { postChangedReview(presentationID) };
 }
 
+//Functie voor het aanpassen van een labelStatus
 function changeLabelStatus(presentationID, labelIdentifier) {
     let url = "http://localhost:8082/api/presentationdraft/"+presentationID+"/label/"+labelIdentifier;
     let xhreq = new XMLHttpRequest();
@@ -250,18 +246,21 @@ function changeLabelStatus(presentationID, labelIdentifier) {
     xhreq.send();
 }
 
+//Functie voor het verwijderen van presentation
 function deletePresentation(presentationID) {
     let conf = confirm("Weet je zeker dat je de presentatie wilt verwijderen?");
+    var a = document.getElementById("label"+presentationID).textContent;
     if (conf == true) {
         let url = "http://localhost:8082/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
-        xhreq.open("DELETE",url,true);
-        xhreq.send();
+        xhreq.open("DELETE",url,true);  
         refreshFields(presentationID);
         document.getElementById("form_review").innerHTML = '';
+        xhreq.send();
     }
 }
 
+// Wijzigt borderColor aan de hand van het aangegeven label
 function borderColor(presentationID) {
     if(document.getElementById("label"+presentationID).textContent === "ACCEPTED"){
         document.getElementById(presentationID).style.borderBottomColor = "green";
@@ -276,8 +275,8 @@ function borderColor(presentationID) {
     }
 }
 
+//Functie voor het refreshen van de fields nadat een label gewijzigd is
 function refreshFields(presentationID) {
-    console.log(">>"+presentationID);
     if(document.getElementById("label"+presentationID).textContent === "ACCEPTED"){
         showAccepted();
     } else if (document.getElementById("label"+presentationID).textContent === "DENIED"){
@@ -291,6 +290,21 @@ function refreshFields(presentationID) {
     }
 }
 
+function refreshFieldsDeletion(presentationLabel) {
+    if(presentationLabel === "ACCEPTED"){
+        showAccepted();
+    } else if (presentationLabel === "DENIED"){
+        showDenied();
+    } else if (presentationLabel === "RESERVED"){
+        showReserved();
+    } else if (presentationLabel === "UNDETERMINED"){
+        showUndertermined();
+    } else if (presentationLabel === "UNLABELED"){
+        showUnlabeled();
+    } 
+}
+
+//Wijziging in presentationObject verzenden
 function postChangedReview(presentationID) {
     let conf = confirm("Weet je zeker dat je de inhoud wilt wijzigen?");
     if (conf == true) {
@@ -303,7 +317,7 @@ function postChangedReview(presentationID) {
         let type = document.getElementById("typeTextarea"+presentationID).value;
         let duration = document.getElementById("durationTextarea"+presentationID).value;
         let label = document.getElementById("label"+presentationID).innerHTML;
-
+        
         let changedPresentationObject = { "presentationDraft":{ "id":presentationID, "subject":subject, "summary":summary, "type":type, "duration":duration, "label":label } };
 
         console.log(changedPresentationObject);
