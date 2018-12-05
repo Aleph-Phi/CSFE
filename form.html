@@ -18,13 +18,13 @@
 
         <form id="applicationForm" onsubmit=postForm()>
             Naam:<br>
-            <input type="text" id="form_name" required/><br>
+            <input type="text" id="form_name" title="" required oninvalid="setCustomValidity('Dit veld is verplicht.')" oninput="setCustomValidity('')"/><br>
             E-mailadres:<br>
-            <input type="text" id="form_email" required/><br>
+            <input type="text" id="form_email" title="" required oninvalid="setCustomValidity('Dit veld is verplicht.')" oninput="setCustomValidity('')"/><br>
             Onderwerp:<br>
-            <input type="text" id="form_subject" required/><br>
+            <input type="text" id="form_subject" title="" required oninvalid="setCustomValidity('Dit veld is verplicht.')" oninput="setCustomValidity('')"/><br>
             Omschrijving:<br>
-            <textarea rows="5" maxlength="500" id="form_summary" placeholder="Maximaal 500 tekens" required></textarea>
+            <textarea rows="5" maxlength="500" id="form_summary" placeholder="Maximaal 500 tekens" required oninvalid="setCustomValidity('Dit veld is verplicht.')" oninput="setCustomValidity('')"></textarea>
 
             <details>
                 Type presentatie:<br>
@@ -52,11 +52,17 @@
                     </select><br>
                 Overige opmerkingen:<br>
                 <input type="text" id="form_requests"><br>
-            </details>
-            <br>
-            <input type="submit" value="Verzenden">
+                Wil je mede-presentatoren aanmelden?<br>
+                    <select id="form_cohost" onchange=addCoHost()>
+                        <option value="0"> Nee </option>
+                        <option value="1"> Ja, 1 </option>
+                        <option value="2"> Ja, 2 </option>
+                        <option value="3"> Ja, 3 </option>
+                    </select><br>
+                    <div id="extra"></div>  
+            </details><br>
+            <input id="button" type="submit" value="Verzenden">
         </form>
-
 
     </div>
 </body>
