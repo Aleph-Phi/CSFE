@@ -27,6 +27,20 @@ html, body, .container {
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
+    float: right;
+}
+
+.generalButton:hover, .backButton:hover {
+    background-color: rgba(0,0,0,.3);
+    transition: 0.3s;
+}
+
+.backButton {
+    border: 2px solid gray;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .acceptButton {
@@ -52,12 +66,20 @@ html, body, .container {
     border-radius: 5px;
     cursor: pointer;
 }
-.deleteButton {
-    border: 2px solid red;
-    margin: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
+
+.acceptButton:hover {
+    background-color: rgba(0,128,0,.3);
+    opacity: 0.5;
+    transition: 0.3s;
+}
+.reserveButton:hover {
+    background-color: rgba(255,165,0,.3);
+    opacity: 0.5;
+    transition: 0.3s;
+}
+.deniedButton:hover {
+    background-color: rgba(255,0,0,.3);
+    transition: 0.3s;
 }
 
 .menu > button:hover {
@@ -94,19 +116,36 @@ html, body, .container {
 }
 
 .form_review {
-    background-color: gray;
+    background-color: rgba(128,128,128,.95);
     height: auto;
-    width: 96%;
+    width: 1750px;
     position: absolute;
     left: 2%;
     top: 50px;
 }
 
-.form_review > p {
+.form_review > p, span {
     color: white;
     text-align: left;
     font-weight: bold;
-    margin: 25px;
+    margin-left: 50px;
+}
+
+.form_review > textarea {
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: rgb(202, 202, 202);
+    color: black;
+    text-align: left;
+    margin-left: 50px;
+    margin-bottom: 20px;
+    width: 1650px;
+    resize: none;
+    display: block;
+}
+
+.textareaSummary {
+    height: 250px;
 }
 
 .form_review > button {
