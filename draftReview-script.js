@@ -20,7 +20,6 @@ function showHostTable() {
             let result ="<th>ID</th>"+
 					 	"<th>Naam</th>"+
 					 	"<th>E-mail</th>"+
-					 	"<th>Telefoonnummer</th>"+
 					 	"<th>Beroep/Achtergrond</th>"+
 					 	"<th>Geslacht</th>"+
 					 	"<th>Geboortedatum</th>"+
