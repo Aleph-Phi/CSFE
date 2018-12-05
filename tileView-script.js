@@ -46,6 +46,7 @@ function showAccepted() {
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
+            console.log(presentationList);
             for(let j = 0; j < presentationList.length; j++) {
                     presentationListLoop(presentationList[j]);
             }
@@ -132,7 +133,7 @@ function presentationListLoop(presentationObject) {
         tile.appendChild(label_p);
 
         document.getElementById("container").appendChild(tile);
-        borderColor(presentationList[i].id)
+        borderColor(presentationObject.id);
         tile.onclick = function() {showFormReview(this.id)};
         // let x=presentationList[i];  // new
         // tilecounter.push(presentationList[i]);
