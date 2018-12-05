@@ -130,8 +130,9 @@ function presentationListLoop(presentationList, i) {
         label_p.setAttribute("id","label"+presentationList[i].id);
         label_p.style.display = "none";
         tile.appendChild(label_p);
-
+        
         document.getElementById("container").appendChild(tile);
+        borderColor(presentationList[i].id);
         tile.onclick = function() {showFormReview(this.id)}; 
 }
 
@@ -173,10 +174,10 @@ function showFormReview(presentationID) {
 function createButtonsReviewForm(review_window, presentationID) {
     let backButton = document.createElement("button");
     let text_backButton = document.createTextNode("Terug");
-    backButton.classList.add("generalButton");
+    backButton.classList.add("backButton");
     backButton.appendChild(text_backButton);
     review_window.appendChild(backButton);
-    backButton.onclick = function() {document.getElementById("form_review").innerHTML = ''};
+    backButton.onclick = function() {document.getElementById("form_review").innerHTML = ''; refreshFields(presentationID) };
 
     let acceptButton = document.createElement("button");
     let text_acceptButton = document.createTextNode("Voorstel accepteren");
@@ -197,7 +198,7 @@ function createButtonsReviewForm(review_window, presentationID) {
     deniedButton.classList.add("deniedButton");
     deniedButton.appendChild(text_deniedButton);
     review_window.appendChild(deniedButton);
-    deniedButton.onclick = function() {  let labelIdentifier = 1; changeLabelStatus(presentationID, labelIdentifier)  };
+    deniedButton.onclick = function() {  let labelIdentifier = 1; changeLabelStatus(presentationID, labelIdentifier); };
 
     let deleteButton = document.createElement("button");
     let text_deleteButton = document.createTextNode("Voorstel verwijderen");
@@ -222,11 +223,39 @@ function changeLabelStatus(presentationID, labelIdentifier) {
 }
 
 function deletePresentation(presentationID) {
-    let conf = confirm("Wil je de presentatie verwijderen?");
+    let conf = confirm("Weet je zeker dat je de presentatie wilt verwijderen?");
     if (conf == true) {
         let url = "http://localhost:8082/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
         xhreq.open("DELETE",url,true);
         xhreq.send();
+    }
+}
+
+function borderColor(presentationID) {
+    if(document.getElementById("label"+presentationID).textContent === "ACCEPTED"){
+        document.getElementById(presentationID).style.borderBottomColor = "green";
+    } else if (document.getElementById("label"+presentationID).textContent === "DENIED"){
+        document.getElementById(presentationID).style.borderBottomColor = "red";
+    } else if (document.getElementById("label"+presentationID).textContent === "RESERVED"){
+        document.getElementById(presentationID).style.borderBottomColor = "orange";
+    } else if (document.getElementById("label"+presentationID).textContent === "UNDETERMINED"){
+        document.getElementById(presentationID).style.borderBottomColor = "gray";
+    } else if (document.getElementById("label"+presentationID).textContent === "UNLABELED"){
+        document.getElementById(presentationID).style.borderBottomColor = "gray";
+    }
+}
+
+function refreshFields(presentationID) {
+    if(document.getElementById("label"+presentationID).textContent === "ACCEPTED"){
+        showAccepted();
+    } else if (document.getElementById("label"+presentationID).textContent === "DENIED"){
+        showDenied();
+    } else if (document.getElementById("label"+presentationID).textContent === "RESERVED"){
+        showReserved();
+    } else if (document.getElementById("label"+presentationID).textContent === "UNDETERMINED"){
+        showUndertermined();
+    } else if (document.getElementById("label"+presentationID).textContent === "UNLABELED"){
+        showUnlabeled();
     }
 }
