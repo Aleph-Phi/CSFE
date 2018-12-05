@@ -144,29 +144,46 @@ function showFormReview(presentationID) {
     createButtonsReviewForm(review_window, presentationID);
   
     let id = document.createElement("p");
-    id.innerHTML = "ID: "+document.getElementById("id"+presentationID).textContent+" Status: "+document.getElementById("label"+presentationID).textContent;
+    id.innerHTML = "ID: "+document.getElementById("id"+presentationID).textContent+"<br>Status: "+document.getElementById("label"+presentationID).textContent;
     console.log(id);
     review_window.appendChild(id);
 
-    let subject = document.createElement("p");
-    subject.innerHTML = "Onderwerp: "+document.getElementById("subject"+presentationID).textContent;
+    let subject = document.createElement("span");
+    let subjectTextarea = document.createElement("textarea");
+    subjectTextarea.setAttribute("id","subjectTextarea"+presentationID);
+    subject.innerHTML = "Onderwerp presentatievoorstel:";
+    subjectTextarea.innerHTML = document.getElementById("subject"+presentationID).textContent;
     console.log(subject);
     review_window.appendChild(subject);
+    review_window.appendChild(subjectTextarea);
 
-    let type = document.createElement("p");
-    type.innerHTML = "Type: "+document.getElementById("type"+presentationID).textContent;
+    let type = document.createElement("span");
+    let typeTextarea = document.createElement("textarea");
+    typeTextarea.setAttribute("id","typeTextarea"+presentationID);
+    type.innerHTML = "Type presentatievoorstel:";
+    typeTextarea.innerHTML = document.getElementById("type"+presentationID).textContent;
     console.log(type);
     review_window.appendChild(type);
+    review_window.appendChild(typeTextarea);
 
-    let duration = document.createElement("p");
-    duration.innerHTML = "Tijdsduur: "+document.getElementById("duration"+presentationID).textContent+" minuten";
+    let duration = document.createElement("span");
+    let durationTextarea = document.createElement("textarea");
+    durationTextarea.setAttribute("id","durationTextarea"+presentationID);
+    duration.innerHTML = "Tijdsduur presentatievoorstel:";
+    durationTextarea.innerHTML = document.getElementById("duration"+presentationID).textContent;
     console.log(duration);
     review_window.appendChild(duration);
+    review_window.appendChild(durationTextarea);
 
-    let summary = document.createElement("p");
-    summary.innerHTML = document.getElementById("summary"+presentationID).textContent;
+    let summary = document.createElement("span");
+    let summaryTextarea = document.createElement("textarea");
+    summaryTextarea.classList.add("textAreaSummary");
+    summaryTextarea.setAttribute("id","summaryTextarea"+presentationID);
+    summary.innerHTML = "Samenvatting presentatievoorstel:";
+    summaryTextarea.innerHTML = document.getElementById("summary"+presentationID).textContent;
     console.log(summary);
     review_window.appendChild(summary);
+    review_window.appendChild(summaryTextarea);
 
     document.getElementById("form_review").appendChild(review_window);
 }
@@ -177,7 +194,7 @@ function createButtonsReviewForm(review_window, presentationID) {
     backButton.classList.add("backButton");
     backButton.appendChild(text_backButton);
     review_window.appendChild(backButton);
-    backButton.onclick = function() {document.getElementById("form_review").innerHTML = ''; refreshFields(presentationID) };
+    backButton.onclick = function() { document.getElementById("form_review").innerHTML = ''; refreshFields(presentationID) };
 
     let acceptButton = document.createElement("button");
     let text_acceptButton = document.createTextNode("Voorstel accepteren");
@@ -198,7 +215,7 @@ function createButtonsReviewForm(review_window, presentationID) {
     deniedButton.classList.add("deniedButton");
     deniedButton.appendChild(text_deniedButton);
     review_window.appendChild(deniedButton);
-    deniedButton.onclick = function() {  let labelIdentifier = 1; changeLabelStatus(presentationID, labelIdentifier); };
+    deniedButton.onclick = function() { let labelIdentifier = 1; changeLabelStatus(presentationID, labelIdentifier) };
 
     let deleteButton = document.createElement("button");
     let text_deleteButton = document.createTextNode("Voorstel verwijderen");
@@ -212,13 +229,19 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.classList.add("generalButton");
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
-    changeButton.onclick = function() { };
+    changeButton.onclick = function() { postChangedReview(presentationID) };
 }
 
 function changeLabelStatus(presentationID, labelIdentifier) {
     let url = "http://localhost:8082/api/presentationdraft/"+presentationID+"/label/"+labelIdentifier;
     let xhreq = new XMLHttpRequest();
     xhreq.open("POST",url,true);
+    xhreq.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            refreshFields(presentationID);
+            document.getElementById("form_review").innerHTML = '';
+        }
+    }
     xhreq.send();
 }
 
@@ -227,10 +250,12 @@ function deletePresentation(presentationID) {
     if (conf == true) {
         let url = "http://localhost:8082/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
-        xhreq.open("DELETE",url,true);
-        xhreq.send();
+        xhreq.open("DELETE",url,true);  
+        xhreq.send(); 
+        refreshFields(presentationID);
+        document.getElementById("form_review").innerHTML = '';
     }
-}
+}        
 
 function borderColor(presentationID) {
     if(document.getElementById("label"+presentationID).textContent === "ACCEPTED"){
@@ -247,6 +272,7 @@ function borderColor(presentationID) {
 }
 
 function refreshFields(presentationID) {
+    console.log(">>"+presentationID);
     if(document.getElementById("label"+presentationID).textContent === "ACCEPTED"){
         showAccepted();
     } else if (document.getElementById("label"+presentationID).textContent === "DENIED"){
@@ -257,5 +283,27 @@ function refreshFields(presentationID) {
         showUndertermined();
     } else if (document.getElementById("label"+presentationID).textContent === "UNLABELED"){
         showUnlabeled();
+    } 
+}
+
+function postChangedReview(presentationID) {
+    let conf = confirm("Weet je zeker dat je de inhoud wilt wijzigen?");
+    if (conf == true) {
+        let xhreq = new XMLHttpRequest();
+        xhreq.open("POST","http://localhost:8082/api/presentationdraft",true);
+        xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        
+        let subject = document.getElementById("subjectTextarea"+presentationID).value;
+        let summary = document.getElementById("summaryTextarea"+presentationID).value;
+        let type = document.getElementById("typeTextarea"+presentationID).value;
+        let duration = document.getElementById("durationTextarea"+presentationID).value;
+        let label = document.getElementById("label"+presentationID).innerHTML;
+               
+        let changedPresentationObject = { "presentationDraft":{ "id":presentationID, "subject":subject, "summary":summary, "type":type, "duration":duration, "label":label } };
+        
+        console.log(changedPresentationObject);
+                     
+        xhreq.send(JSON.stringify(changedPresentationObject));
+        refreshFields(presentationID);
     }
 }
