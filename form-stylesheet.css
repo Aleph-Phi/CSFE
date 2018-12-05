@@ -17,12 +17,6 @@ h1 {
     border-radius: 20px;
 }
 
-.presentationProposal> button{
-	margin-bottom:2px;
-	margin:auto;
-  	display:block;
-}
-
 .presentationProposal > form {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -31,13 +25,20 @@ h1 {
 }
 
 .presentationProposal > form > details > input {
-    width:95%
+    width:95%;
 }
 
-.presentationProposal > form > input {
-    width:95%
+.presentationProposal > form > input, textarea {
+    width:95%;
 }
 
-.presentationProposal > form > textarea {
-    width:95%
+#button {
+    width:15%;
+    margin-bottom:2px;
+	margin:auto;
+  	display:block;
+}
+
+#extra > input{
+    width:95%;
 }

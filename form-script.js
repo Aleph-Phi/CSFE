@@ -23,3 +23,26 @@ function postForm() {
     xhreq.send(JSON.stringify(presentationDraftApplicant));
     alert("Bedankt voor je aanmelding");
 }
+
+function addCoHost() {               // Toont extra velden voor naam en e-mail van de co-host(s).
+    console.log("in test");
+    let x = document.getElementById("form_cohost").value;
+    document.getElementById("extra").innerHTML = "";
+    for(let i = 1; i<=x; i++) {
+        var div1 = document.createElement("div");
+        var text1 = document.createTextNode("Naam:");
+        div1.appendChild(text1);
+        document.getElementById("extra").appendChild(div1);
+        var field1 = document.createElement("input");
+        document.getElementById("extra").appendChild(field1);
+
+        var div2 = document.createElement("div");
+        var text2 = document.createTextNode("E-mailadres:");
+        div2.appendChild(text2);
+        document.getElementById("extra").appendChild(div2);
+        var field2 = document.createElement("input");
+        document.getElementById("extra").appendChild(field2);
+
+       console.log(i + " cohost(s)");
+    }
+}
