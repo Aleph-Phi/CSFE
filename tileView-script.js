@@ -46,7 +46,6 @@ function showAccepted() {
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
-            console.log(presentationList);
             for(let j = 0; j < presentationList.length; j++) {
                     presentationListLoop(presentationList[j]);
             }
@@ -87,7 +86,25 @@ function showReserved() {
     xhr.send();
 }
 
+function getPresentationById(presentationID) {
+    let xhr = new XMLHttpRequest();
+    let url = "http://localhost:8082/api/presentationdraft/"+presentationID;
+    xhr.open("GET",url,true);
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            let presentationObject = JSON.parse(this.responseText);
+            // console.log(presentationObject);
+            return presentationObject;
+        }
+    }
+    xhr.send();
+}
+
+//Loopt over de objecten om de tegels aan te maken met de betreffende info
 function presentationListLoop(presentationObject) {
+        var test = getPresentationById(presentationObject.id);
+        console.log(">>"+test);
+
         var tile = document.createElement("div");
         tile.classList.add("tileNew");
         tile.setAttribute("id", presentationObject.id);
@@ -134,16 +151,15 @@ function presentationListLoop(presentationObject) {
 
         document.getElementById("container").appendChild(tile);
         borderColor(presentationObject.id);
-        tile.onclick = function() {showFormReview(this.id)};
+        tile.onclick = function() { showFormReview(this.id) };
         // let x=presentationList[i];  // new
         // tilecounter.push(presentationList[i]);
         // console.log(tilecounter.length); //new
         // console.log(tilecounter); //new
 }
 
-
+//Creert en toont het overzichtscherm van de inhoud van een presentatie (na klik op tegel)
 function showFormReview(presentationID) {
-
     let review_window = document.createElement("div");
     review_window.classList.add("form_review");
     createButtonsReviewForm(review_window, presentationID);
@@ -218,6 +234,13 @@ function createButtonsReviewForm(review_window, presentationID) {
     review_window.appendChild(deniedButton);
     deniedButton.onclick = function() { let labelIdentifier = 1; changeLabelStatus(presentationID, labelIdentifier) };
 
+    let undeterminedButton = document.createElement("button");
+    let text_undeterminedButton = document.createTextNode("Voorstel to-do");
+    undeterminedButton.classList.add("undeterminedButton");
+    undeterminedButton.appendChild(text_undeterminedButton);
+    review_window.appendChild(undeterminedButton);
+    undeterminedButton.onclick = function() { let labelIdentifier = 4; changeLabelStatus(presentationID, labelIdentifier) };
+
     let deleteButton = document.createElement("button");
     let text_deleteButton = document.createTextNode("Voorstel verwijderen");
     deleteButton.classList.add("generalButton");
@@ -255,8 +278,12 @@ function deletePresentation(presentationID) {
         let url = "http://localhost:8082/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
         xhreq.open("DELETE",url,true);  
-        refreshFields(presentationID);
-        document.getElementById("form_review").innerHTML = '';
+        // xhreq.onreadystatechange = function() {
+        //     if(this.readyState == 4 && this.status == 200){
+            refreshFieldsDeletion(a);
+            document.getElementById("form_review").innerHTML = '';    
+        //     }
+        // }
         xhreq.send();
     }
 }
@@ -285,7 +312,7 @@ function refreshFields(presentationID) {
     } else if (document.getElementById("label"+presentationID).textContent === "RESERVED"){
         showReserved();
     } else if (document.getElementById("label"+presentationID).textContent === "UNDETERMINED"){
-        showUndertermined();
+        showUnlabeled();
     } else if (document.getElementById("label"+presentationID).textContent === "UNLABELED"){
         showUnlabeled();
     }
@@ -299,13 +326,13 @@ function refreshFieldsDeletion(presentationLabel) {
     } else if (presentationLabel === "RESERVED"){
         showReserved();
     } else if (presentationLabel === "UNDETERMINED"){
-        showUndertermined();
+        showUnlabeled();
     } else if (presentationLabel === "UNLABELED"){
         showUnlabeled();
     } 
 }
 
-//Wijziging in presentationObject verzenden
+//Wijziging in presentationObject verzenden (Moet nog geupdate worden, alle velden die niet opnieuw ingevuld worden, worden null Query??)
 function postChangedReview(presentationID) {
     let conf = confirm("Weet je zeker dat je de inhoud wilt wijzigen?");
     if (conf == true) {
