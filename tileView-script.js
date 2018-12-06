@@ -12,7 +12,7 @@ function clearSet() {
 function showAll() { //test met currentpage multi
     clearSet()
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:8082/api/presentationdraft",true);
+    xhr.open("GET","http://localhost:8082/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -190,7 +190,87 @@ function showFormReview(presentationID) {
     review_window.appendChild(summary);
     review_window.appendChild(summaryTextarea);
 
+    // let form_navigator_panel=document.createElement("div");
+    // form_navigator_panel.classList.add("form_navigator_panel");
+    // form_navigator_panel.setAttribute("id", "form_navigator_panel"+presentationID);
+    // let prevpagecontainer=document.createElement("div");
+    // prevpagecontainer.setAttribute("id", "prevpagecontainer"+presentationID);
+    // console.log(prevpagecontainer);
+    // let nextpagecontainer=document.createElement("div");
+    // nextpagecontainer.setAttribute("id", "nextpagecontainer"+presentationID);
+    // console.log(nextpagecontainer);
+    // form_navigator_panel.appendChild(prevpagecontainer);
+    // form_navigator_panel.appendChild(nextpagecontainer);
+    // review_window.appendChild(form_navigator_panel);
+
+    generatePageNavigators(review_window, presentationID);
+
     document.getElementById("form_review").appendChild(review_window);
+}
+
+function findIndexOfDiv(presentationID){
+    console.log(presentationID);
+    let isolated_div=document.getElementById(presentationID); // div isolator inside of parentNode - used for flipping through form reviews
+    console.log(isolated_div);
+    let pNode = isolated_div.parentNode;
+    let index_of_div = Array.prototype.indexOf.call(pNode.children, isolated_div);
+    return index_of_div;
+    // var test=Array.from(isolated_div.parentNode.children).indexOf(isolated_div);
+    // var testL=isolated_div.parentNode.children.length;
+    // console.log(test);
+    // console.log(testL);
+}
+
+function determineCollectionSize(presentationID){
+    let isolated_div=document.getElementById(presentationID);
+    // let collectionSize=isolated_div.parentNode.children.length;
+    // return collectionSize;
+    return isolated_div.parentNode.children.length;
+}
+
+function generatePageNavigators(review_window, presentationID){
+    let i=findIndexOfDiv(presentationID);
+    let arrSize=determineCollectionSize(presentationID);
+    let isolated_div=document.getElementById(presentationID)
+
+    let form_navigator_panel=document.createElement("div");
+    form_navigator_panel.classList.add("form_navigator_panel");
+    form_navigator_panel.setAttribute("id", "form_navigator_panel"+presentationID);
+    let prevpagecontainer=document.createElement("div");
+    prevpagecontainer.classList.add("pagebuttoncontainer");
+    prevpagecontainer.setAttribute("id", "prevpagecontainer"+presentationID);
+    console.log(prevpagecontainer);
+    let nextpagecontainer=document.createElement("div");
+    nextpagecontainer.classList.add("pagebuttoncontainer");
+    nextpagecontainer.setAttribute("id", "nextpagecontainer"+presentationID);
+    console.log(nextpagecontainer);
+
+
+    if (i<(arrSize-1)){
+      let nextPageButton = document.createElement("button");
+      nextPageButton.classList.add("nextPageButton");
+      // let nextpagecontainer=document.getElementById("nextpagecontainer"+presentationID);
+      // console.log(document.getElementById("form_navigator_panel"));
+      // console.log(nextpagecontainer);
+      nextpagecontainer.appendChild(nextPageButton);
+      // review_window.appendChild(nextPageButton);
+    //  nextPageButton.onclick = function() { };
+      nextPageButton.onclick = function() {showFormReview(isolated_div.parentNode.children[++i].id)};
+
+    }
+    if (i>0){
+      let prevPageButton = document.createElement("button");
+      prevPageButton.classList.add("prevPageButton");
+      // let prevpagecontainer=document.getElementById("prevpagecontainer"+presentationID);
+      prevpagecontainer.appendChild(prevPageButton);
+      // review_window.appendChild(prevPageButton);
+      // prevPageButton.onclick = function() { };
+      prevPageButton.onclick = function() {showFormReview(isolated_div.parentNode.children[--i].id)};
+    }
+
+      form_navigator_panel.appendChild(prevpagecontainer);
+      form_navigator_panel.appendChild(nextpagecontainer);
+      review_window.appendChild(form_navigator_panel);
 }
 
 function createButtonsReviewForm(review_window, presentationID) {
@@ -235,6 +315,8 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
     changeButton.onclick = function() { postChangedReview(presentationID) };
+
+    // generatePageNavigators(review_window, presentationID);
 }
 
 function changeLabelStatus(presentationID, labelIdentifier) {
@@ -285,7 +367,7 @@ function refreshFields(presentationID) {
     } else if (document.getElementById("label"+presentationID).textContent === "RESERVED"){
         showReserved();
     } else if (document.getElementById("label"+presentationID).textContent === "UNDETERMINED"){
-        showUndertermined();
+        showUndetermined();
     } else if (document.getElementById("label"+presentationID).textContent === "UNLABELED"){
         showUnlabeled();
     }
