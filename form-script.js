@@ -17,15 +17,31 @@ function postForm() {
     date_of_birth = date_of_birth.reverse().join('-');
     var requests = document.getElementById("form_requests").value;
 
+    var applicants = [];
+    var applicant = { "name":name, "email":email, "occupation":occupation, "gender":gender, "dateOfBirth":date_of_birth, "requests":requests };
+    applicants.push(applicant);
+
+    let y = document.getElementById("form_cohost").value;
+    for(let i = 1; i<=y; i++) {                                  // Checkt of er co-hosts zijn aangemeld en maakt deze aan.
+        applicant = postCoHost(i);
+        applicants.push(applicant);
+    }
+
     var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "duration":duration },
-                                      "applicants": [{ "name":name, "email":email, "occupation":occupation, "gender":gender, "dateOfBirth":date_of_birth, "requests":requests }] };
+                                      "applicants": applicants };
 
     xhreq.send(JSON.stringify(presentationDraftApplicant));
-    alert("Bedankt voor je aanmelding");
+    alert("Bedankt voor je aanmelding!");
+}
+
+function postCoHost(x) {
+    var name = document.getElementById("form_name"+x).value;
+    var email = document.getElementById("form_email"+x).value;
+    var applicant = { "name":name, "email":email, "requests":"Ik ben een cohost." };
+    return applicant; 
 }
 
 function addCoHost() {               // Toont extra velden voor naam en e-mail van de co-host(s).
-    console.log("in test");
     let x = document.getElementById("form_cohost").value;
     document.getElementById("extra").innerHTML = "";
     for(let i = 1; i<=x; i++) {
@@ -34,6 +50,7 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
         div1.appendChild(text1);
         document.getElementById("extra").appendChild(div1);
         var field1 = document.createElement("input");
+        field1.setAttribute("id", "form_name"+i);
         document.getElementById("extra").appendChild(field1);
 
         var div2 = document.createElement("div");
@@ -41,8 +58,7 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
         div2.appendChild(text2);
         document.getElementById("extra").appendChild(div2);
         var field2 = document.createElement("input");
+        field2.setAttribute("id", "form_email"+i);
         document.getElementById("extra").appendChild(field2);
-
-       console.log(i + " cohost(s)");
     }
 }
