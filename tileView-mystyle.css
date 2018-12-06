@@ -30,7 +30,7 @@ html, body, .container {
     float: right;
 }
 
-.generalButton:hover, .backButton:hover {
+.generalButton:hover, .backButton:hover, .undeterminedButton:hover {
     background-color: rgba(0,0,0,.3);
     transition: 0.3s;
 }
@@ -61,6 +61,14 @@ html, body, .container {
 
 .reserveButton {
     border: 2px solid orange;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.undeterminedButton {
+    border: 2px solid gray;
     margin: 15px;
     padding: 10px;
     border-radius: 5px;
