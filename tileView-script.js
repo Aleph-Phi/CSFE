@@ -1,18 +1,14 @@
-// 0=UNLABELED
-// 1=DENIED
-// 2=ACCEPTED
-// 3=RESERVED
-// 4=UNDETERMINED -> valt voor nu samen met label 0
+var port="8082";
 
 function clearSet() {
     var myNode = document.getElementById("container");
     myNode.innerHTML = '';
 }
 
-function showAll() { //test met currentpage multi
+function showAll() {
     clearSet()
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:8082/api/presentationdraft",true);
+    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -27,7 +23,7 @@ function showAll() { //test met currentpage multi
 function showDenied() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:8082/api/presentationdraft/findbylabel/1",true);
+    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft/findbylabel/1",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -42,7 +38,7 @@ function showDenied() {
 function showAccepted() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:8082/api/presentationdraft/findbylabel/2",true);
+    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft/findbylabel/2",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -57,7 +53,7 @@ function showAccepted() {
 function showUnlabeled() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:8082/api/presentationdraft",true);
+    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -74,7 +70,7 @@ function showUnlabeled() {
 function showReserved() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:8082/api/presentationdraft/findbylabel/3",true);
+    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft/findbylabel/3",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -88,12 +84,11 @@ function showReserved() {
 
 function getPresentationById(presentationID) {
     let xhr = new XMLHttpRequest();
-    let url = "http://localhost:8082/api/presentationdraft/"+presentationID;
+    let url = "http://localhost:"+port+"/api/presentationdraft/"+presentationID;
     xhr.open("GET",url,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationObject = JSON.parse(this.responseText);
-            // console.log(presentationObject);
             return presentationObject;
         }
     }
@@ -152,10 +147,6 @@ function presentationListLoop(presentationObject) {
         document.getElementById("container").appendChild(tile);
         borderColor(presentationObject.id);
         tile.onclick = function() { showFormReview(this.id) };
-        // let x=presentationList[i];  // new
-        // tilecounter.push(presentationList[i]);
-        // console.log(tilecounter.length); //new
-        // console.log(tilecounter); //new
 }
 
 //Creert en toont het overzichtscherm van de inhoud van een presentatie (na klik op tegel)
@@ -201,7 +192,58 @@ function showFormReview(presentationID) {
     review_window.appendChild(summary);
     review_window.appendChild(summaryTextarea);
 
+    generatePageNavigators(review_window, presentationID);
+
     document.getElementById("form_review").appendChild(review_window);
+}
+
+function findIndexOfDiv(presentationID){
+    let isolated_div=document.getElementById(presentationID); // div isolator inside of parentNode - used for flipping through form reviews
+    let pNode = isolated_div.parentNode;
+    let index_of_div = Array.prototype.indexOf.call(pNode.children, isolated_div);
+    return index_of_div;
+}
+
+function determineCollectionSize(presentationID){
+    let isolated_div=document.getElementById(presentationID);
+    return isolated_div.parentNode.children.length;
+}
+
+//Genereert de pagina navigators van het reviewForm
+function generatePageNavigators(review_window, presentationID){
+    let i=findIndexOfDiv(presentationID);
+    let arrSize=determineCollectionSize(presentationID);
+    let isolated_div=document.getElementById(presentationID)
+
+    let form_navigator_panel=document.createElement("div");
+    form_navigator_panel.classList.add("form_navigator_panel");
+    form_navigator_panel.setAttribute("id", "form_navigator_panel"+presentationID);
+    let prevpagecontainer=document.createElement("div");
+    prevpagecontainer.classList.add("pagebuttoncontainer");
+    prevpagecontainer.setAttribute("id", "prevpagecontainer"+presentationID);
+    console.log(prevpagecontainer);
+    let nextpagecontainer=document.createElement("div");
+    nextpagecontainer.classList.add("pagebuttoncontainer");
+    nextpagecontainer.setAttribute("id", "nextpagecontainer"+presentationID);
+    console.log(nextpagecontainer);
+
+    if (i<(arrSize-1)){
+      let nextPageButton = document.createElement("button");
+      nextPageButton.classList.add("nextPageButton");
+      nextpagecontainer.appendChild(nextPageButton);
+      nextPageButton.onclick = function() {showFormReview(isolated_div.parentNode.children[++i].id)};
+    }
+
+    if (i>0){
+      let prevPageButton = document.createElement("button");
+      prevPageButton.classList.add("prevPageButton");
+      prevpagecontainer.appendChild(prevPageButton);
+      prevPageButton.onclick = function() {showFormReview(isolated_div.parentNode.children[--i].id)};
+    }
+
+      form_navigator_panel.appendChild(prevpagecontainer);
+      form_navigator_panel.appendChild(nextpagecontainer);
+      review_window.appendChild(form_navigator_panel);
 }
 
 //Ontwerp knoppen van het reviewForm
@@ -258,7 +300,7 @@ function createButtonsReviewForm(review_window, presentationID) {
 
 //Functie voor het aanpassen van een labelStatus
 function changeLabelStatus(presentationID, labelIdentifier) {
-    let url = "http://localhost:8082/api/presentationdraft/"+presentationID+"/label/"+labelIdentifier;
+    let url = "http://localhost:"+port+"/api/presentationdraft/"+presentationID+"/label/"+labelIdentifier;
     let xhreq = new XMLHttpRequest();
     xhreq.open("POST",url,true);
     xhreq.onreadystatechange = function() {
@@ -275,15 +317,11 @@ function deletePresentation(presentationID) {
     let conf = confirm("Weet je zeker dat je de presentatie wilt verwijderen?");
     var a = document.getElementById("label"+presentationID).textContent;
     if (conf == true) {
-        let url = "http://localhost:8082/api/presentationdraft/delete/"+presentationID;
+        let url = "http://localhost:"+port+"/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
-        xhreq.open("DELETE",url,true);  
-        // xhreq.onreadystatechange = function() {
-        //     if(this.readyState == 4 && this.status == 200){
+        xhreq.open("DELETE",url,true);
             refreshFieldsDeletion(a);
-            document.getElementById("form_review").innerHTML = '';    
-        //     }
-        // }
+            document.getElementById("form_review").innerHTML = '';
         xhreq.send();
     }
 }
@@ -329,7 +367,7 @@ function refreshFieldsDeletion(presentationLabel) {
         showUnlabeled();
     } else if (presentationLabel === "UNLABELED"){
         showUnlabeled();
-    } 
+    }
 }
 
 //Wijziging in presentationObject verzenden (Moet nog geupdate worden, alle velden die niet opnieuw ingevuld worden, worden null Query??)
@@ -337,7 +375,7 @@ function postChangedReview(presentationID) {
     let conf = confirm("Weet je zeker dat je de inhoud wilt wijzigen?");
     if (conf == true) {
         let xhreq = new XMLHttpRequest();
-        xhreq.open("POST","http://localhost:8082/api/presentationdraft",true);
+        xhreq.open("POST","http://localhost:"+port+"/api/presentationdraft",true);
         xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
         let subject = document.getElementById("subjectTextarea"+presentationID).value;
@@ -345,7 +383,7 @@ function postChangedReview(presentationID) {
         let type = document.getElementById("typeTextarea"+presentationID).value;
         let duration = document.getElementById("durationTextarea"+presentationID).value;
         let label = document.getElementById("label"+presentationID).innerHTML;
-        
+
         let changedPresentationObject = { "presentationDraft":{ "id":presentationID, "subject":subject, "summary":summary, "type":type, "duration":duration, "label":label } };
 
         console.log(changedPresentationObject);
@@ -354,162 +392,3 @@ function postChangedReview(presentationID) {
         refreshFields(presentationID);
     }
 }
-
-
-// var tilecounter=[]; //mogelijk eruit slopen
-// var currentpage=1;
-// var displaylimit=45;
-// var presentationcounter=[]; //gebruiken in showUnlabeled om UNLABELED en UNDETERMINED samen te brengen.
-
-//
-// function generatePages(x){ // use the array.length as argument
-//   // var number_of_pages = Math.floor(sorted_presentations_amount/45);
-//   let hasNextPage=Math.floor(x/45);
-//   console.log(hasNextPage);
-//   if (hasNextPage>0){
-//     let next_page = document.createElement("div");
-//     next_page.classList.add("next_page");
-//     next_page.onclick = function() {showUndetermined(++currentpage)};
-//     document.getElementById("container").appendChild(next_page);
-//   }
-//   if (currentpage>1){
-//     let prev_page = document.createElement("div");
-//     prev_page.classList.add("prev_page");
-//     prev_page.onclick = function() {showUndetermined(--currentpage)};
-//     document.getElementById("container").appendChild(prev_page);
-// }
-//   tilecounter=[];
-// }
-
-// 0=UNLABELED
-// 1=DENIED
-// 2=ACCEPTED
-// 3=RESERVED
-// 4=UNDETERMINED -> valt voor nu samen met label 0
-
-// function showAll() { //test met currentpage multi
-//     clearSet();
-//     calculateSortedPresentations(0);
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("GET","http://localhost:8082/api/presentationdraft",true);
-//     xhr.onreadystatechange = function() {
-//         if(this.readyState == 4 && this.status == 200){
-//             let presentationList = JSON.parse(this.responseText);
-//             if (currentpage==1){
-//             for(let j = 0; j < (displaylimit); j++) {
-//                     presentationListLoop(presentationList, j);
-//                   }
-//             } else {
-//                     for(let j = 0; ((j+displaylimit)*currentpage) < (displaylimit*currentpage); j++) {
-//                             presentationListLoop(presentationList, ((j+displaylimit)*currentpage));
-//                             }
-//                   }
-//         }
-//         generatePages(tilecounter.length);
-//     }
-//     xhr.send();
-// }
-//
-// function showUnlabeled() {
-//     clearSet();
-//     presentationcounter=[];
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("GET","http://localhost:8082/api/presentationdraft",true);
-//     xhr.onreadystatechange = function() {
-//         if(this.readyState == 4 && this.status == 200){
-//             let presentationList = JSON.parse(this.responseText);
-//             for(let j = 0; j < displaylimit; j++) {
-//                 if(presentationList[j].label === "UNLABELED" || presentationList[j].label === "UNDETERMINED" ) {
-//                     presentationcounter.push(presentationList[j]);
-//                 }
-//               }
-//               console.log(presentationcounter.length);
-//
-//             if (currentpage==1){
-//             for(let j = 0; j < displaylimit; j++) {
-//                 if(presentationList[j].label === "UNLABELED" || presentationList[j].label === "UNDETERMINED" ) {
-//                     presentationListLoop(presentationList, j);
-//                 }
-//             }
-//           }
-//         if (currentpage>1){
-//           for(let j = 0; ((j+displaylimit)*currentpage) < (displaylimit*currentpage); j++) {
-//                   presentationListLoop(presentationList, ((j+displaylimit)*currentpage));
-//         }
-//       }
-//             console.log(currentpage);
-//             console.log("In showUnlabeled");
-//             console.log(presentationcounter.length);
-//             generatePages(tilecounter.length);
-//             console.log(tilecounter.length);
-//         }
-//     }
-//     xhr.send();
-// }
-//
-//
-// function calculateSortedPresentations(labelnum) {
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("GET","http://localhost:8082/api/presentationdraft/findbylabel/"+labelnum,true);
-//     xhr.onreadystatechange = function() {
-//         if(this.readyState == 4 && this.status == 200){
-//             let presentationList = JSON.parse(this.responseText);
-//             console.log(presentationList.length);
-//             var sorted_presentations_amount=presentationList.length;
-//         }
-//     }
-//     xhr.send();
-// }
-//
-//
-// function showAccepted() {
-//     clearSet();
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("GET","http://localhost:8082/api/presentationdraft/findbylabel/2",true);
-//     xhr.onreadystatechange = function() {
-//         if(this.readyState == 4 && this.status == 200){
-//             let presentationList = JSON.parse(this.responseText);
-//             for(let j = 0; j < presentationList.length; j++) {
-//                     presentationListLoop(presentationList, j);
-//             }
-//             generatePages(tilecounter.length);
-//         }
-//     }
-//     xhr.send();
-// }
-//
-// function showDenied() {
-//     clearSet();
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("GET","http://localhost:8082/api/presentationdraft/findbylabel/1",true);
-//     xhr.onreadystatechange = function() {
-//         if(this.readyState == 4 && this.status == 200){
-//             let presentationList = JSON.parse(this.responseText);
-//             for(let j = 0; j < presentationList.length; j++) {
-//                     presentationListLoop(presentationList, j);
-//             }
-//             generatePages(tilecounter.length);
-//         }
-//     }
-//     xhr.send();
-// }
-
-
-
-// function showUnlabeled() {
-//     clearSet();
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("GET","http://localhost:8082/api/presentationdraft",true);
-//     xhr.onreadystatechange = function() {
-//         if(this.readyState == 4 && this.status == 200){
-//             let presentationList = JSON.parse(this.responseText);
-//             for(let j = 0; j < presentationList.length; j++) {
-//                 if(presentationList[j].label === "UNLABELED") {
-//                     presentationListLoop(presentationList, j);
-//                 }
-//             }
-//             generatePages(tilecounter.length);
-//         }
-//     }
-//     xhr.send();
-// }
