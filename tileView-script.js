@@ -10,7 +10,7 @@ function clearSet() {
 }
 
 function showAll() { //test met currentpage multi
-    clearSet()
+    clearSet();
     let xhr = new XMLHttpRequest();
     xhr.open("GET","http://localhost:8082/api/presentationdraft",true);
     xhr.onreadystatechange = function() {
@@ -93,18 +93,19 @@ function getPresentationById(presentationID) {
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationObject = JSON.parse(this.responseText);
-            // console.log(presentationObject);
-            return presentationObject;
+            test(presentationObject);
         }
     }
     xhr.send();
 }
 
+function test(presentationObject) {
+    var hoi = presentationObject;
+    alert(hoi.summary);
+}
+
 //Loopt over de objecten om de tegels aan te maken met de betreffende info
 function presentationListLoop(presentationObject) {
-        var test = getPresentationById(presentationObject.id);
-        console.log(">>"+test);
-
         var tile = document.createElement("div");
         tile.classList.add("tileNew");
         tile.setAttribute("id", presentationObject.id);
