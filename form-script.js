@@ -38,7 +38,7 @@ function postCoHost(x) {
     var name = document.getElementById("form_name"+x).value;
     var email = document.getElementById("form_email"+x).value;
     var applicant = { "name":name, "email":email, "requests":"Ik ben een cohost." };
-    return applicant; 
+    return applicant;
 }
 
 function addCoHost() {               // Toont extra velden voor naam en e-mail van de co-host(s).
