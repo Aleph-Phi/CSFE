@@ -1,14 +1,12 @@
-var port="8082";
-
 function clearSet() {
     var myNode = document.getElementById("container");
     myNode.innerHTML = '';
 }
 
 function showAll() {
-    clearSet()
+    clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
+    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -23,7 +21,7 @@ function showAll() {
 function showDenied() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft/findbylabel/1",true);
+    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/findbylabel/1",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -38,7 +36,7 @@ function showDenied() {
 function showAccepted() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft/findbylabel/2",true);
+    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/findbylabel/2",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -53,7 +51,7 @@ function showAccepted() {
 function showUnlabeled() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft",true);
+    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -70,7 +68,7 @@ function showUnlabeled() {
 function showReserved() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+port+"/api/presentationdraft/findbylabel/3",true);
+    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/findbylabel/3",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -82,24 +80,8 @@ function showReserved() {
     xhr.send();
 }
 
-function getPresentationById(presentationID) {
-    let xhr = new XMLHttpRequest();
-    let url = "http://localhost:"+port+"/api/presentationdraft/"+presentationID;
-    xhr.open("GET",url,true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            let presentationObject = JSON.parse(this.responseText);
-            return presentationObject;
-        }
-    }
-    xhr.send();
-}
-
 //Loopt over de objecten om de tegels aan te maken met de betreffende info
 function presentationListLoop(presentationObject) {
-        var test = getPresentationById(presentationObject.id);
-        console.log(">>"+test);
-
         var tile = document.createElement("div");
         tile.classList.add("tileNew");
         tile.setAttribute("id", presentationObject.id);
@@ -154,6 +136,7 @@ function showFormReview(presentationID) {
     let review_window = document.createElement("div");
     review_window.classList.add("form_review");
     createButtonsReviewForm(review_window, presentationID);
+    review_window.setAttribute("id","review_window_div"+presentationID);
 
     let id = document.createElement("p");
     id.innerHTML = "ID: "+document.getElementById("id"+presentationID).textContent+"<br>Status: "+document.getElementById("label"+presentationID).textContent;
@@ -295,12 +278,12 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.classList.add("generalButton");
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
-    changeButton.onclick = function() { postChangedReview(presentationID) };
+    changeButton.onclick = function() { changeReview(presentationID) };
 }
 
 //Functie voor het aanpassen van een labelStatus
 function changeLabelStatus(presentationID, labelIdentifier) {
-    let url = "http://localhost:"+port+"/api/presentationdraft/"+presentationID+"/label/"+labelIdentifier;
+    let url = "http://localhost:"+PORT+"/api/presentationdraft/"+presentationID+"/label/"+labelIdentifier;
     let xhreq = new XMLHttpRequest();
     xhreq.open("POST",url,true);
     xhreq.onreadystatechange = function() {
@@ -317,11 +300,15 @@ function deletePresentation(presentationID) {
     let conf = confirm("Weet je zeker dat je de presentatie wilt verwijderen?");
     var a = document.getElementById("label"+presentationID).textContent;
     if (conf == true) {
-        let url = "http://localhost:"+port+"/api/presentationdraft/delete/"+presentationID;
+        let url = "http://localhost:"+PORT+"/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
         xhreq.open("DELETE",url,true);
-            refreshFieldsDeletion(a);
-            document.getElementById("form_review").innerHTML = '';
+        xhreq.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200){
+                refreshFieldsDeletion(a);
+                document.getElementById("form_review").innerHTML = '';
+            }
+        }
         xhreq.send();
     }
 }
@@ -370,25 +357,35 @@ function refreshFieldsDeletion(presentationLabel) {
     }
 }
 
-//Wijziging in presentationObject verzenden (Moet nog geupdate worden, alle velden die niet opnieuw ingevuld worden, worden null Query??)
-function postChangedReview(presentationID) {
+function changeReview(presentationID) {
+    let xhr = new XMLHttpRequest();
+    let url = "http://localhost:"+PORT+"/api/presentationdraft/"+presentationID;
+    xhr.open("GET",url,true);
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            let presentationObject = JSON.parse(this.responseText); 
+                console.log(presentationObject);
+                postChangedReview(presentationObject);
+        }
+    }
+    xhr.send();
+}
+
+function postChangedReview(presentationObject) {
     let conf = confirm("Weet je zeker dat je de inhoud wilt wijzigen?");
     if (conf == true) {
         let xhreq = new XMLHttpRequest();
-        xhreq.open("POST","http://localhost:"+port+"/api/presentationdraft",true);
+        xhreq.open("POST","http://localhost:"+PORT+"/api/presentationdraft",true);
         xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-        let subject = document.getElementById("subjectTextarea"+presentationID).value;
-        let summary = document.getElementById("summaryTextarea"+presentationID).value;
-        let type = document.getElementById("typeTextarea"+presentationID).value;
-        let duration = document.getElementById("durationTextarea"+presentationID).value;
-        let label = document.getElementById("label"+presentationID).innerHTML;
-
-        let changedPresentationObject = { "presentationDraft":{ "id":presentationID, "subject":subject, "summary":summary, "type":type, "duration":duration, "label":label } };
-
-        console.log(changedPresentationObject);
-
+        presentationObject.subject = document.getElementById("subjectTextarea"+presentationObject.id).value;
+        presentationObject.summary = document.getElementById("summaryTextarea"+presentationObject.id).value;
+        presentationObject.type = document.getElementById("typeTextarea"+presentationObject.id).value;
+        presentationObject.duration = document.getElementById("durationTextarea"+presentationObject.id).value;
+        console.log(presentationObject);          
+        let changedPresentationObject = { "presentationDraft": { "id":presentationObject.id, "subject":presentationObject.subject, "timeOfCreation":presentationObject.timeOfCreation,
+                                          "summary":presentationObject.summary, "type":presentationObject.type, "duration":presentationObject.duration, "label":presentationObject.label }, 
+                                          "applicants": presentationObject.applicants };
         xhreq.send(JSON.stringify(changedPresentationObject));
-        refreshFields(presentationID);
+        alert("Voorstel is gewijzigd.");
     }
 }
