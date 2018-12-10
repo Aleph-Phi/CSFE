@@ -299,14 +299,16 @@ function changeLabelStatus(presentationID, labelIdentifier) {
 function deletePresentation(presentationID) {
     let conf = confirm("Weet je zeker dat je de presentatie wilt verwijderen?");
     var a = document.getElementById("label"+presentationID).textContent;
+    console.log(a);
     if (conf == true) {
         let url = "http://localhost:"+PORT+"/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
         xhreq.open("DELETE",url,true);
         xhreq.onreadystatechange = function() {
-            if(this.readyState == 4 && this.status == 200){
-                refreshFieldsDeletion(a);
+            if(this.readyState == 4){
                 document.getElementById("form_review").innerHTML = '';
+                alert("Voorstel is verwijderd.");
+                refreshFieldsDeletion(a);
             }
         }
         xhreq.send();
