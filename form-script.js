@@ -38,7 +38,7 @@ function postCoHost(x) {
     var name = document.getElementById("form_name"+x).value;
     var email = document.getElementById("form_email"+x).value;
     var applicant = { "name":name, "email":email, "requests":"Ik ben een cohost." };
-    return applicant;
+    return applicant; 
 }
 
 function addCoHost() {               // Toont extra velden voor naam en e-mail van de co-host(s).
@@ -51,6 +51,9 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
         document.getElementById("extra").appendChild(div1);
         var field1 = document.createElement("input");
         field1.setAttribute("id", "form_name"+i);
+        field1.setAttribute("required", "required");
+        field1.setAttribute("oninvalid", "setCustomValidity('Dit veld is verplicht.')");
+        field1.setAttribute("oninput", "setCustomValidity('')");
         document.getElementById("extra").appendChild(field1);
 
         var div2 = document.createElement("div");
@@ -59,6 +62,9 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
         document.getElementById("extra").appendChild(div2);
         var field2 = document.createElement("input");
         field2.setAttribute("id", "form_email"+i);
+        field2.setAttribute("required", "required");
+        field2.setAttribute("oninvalid", "setCustomValidity('Dit veld is verplicht.')");
+        field2.setAttribute("oninput", "setCustomValidity('')");
         document.getElementById("extra").appendChild(field2);
     }
 }
