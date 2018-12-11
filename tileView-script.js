@@ -85,6 +85,7 @@ function presentationListLoop(presentationObject) {
         var tile = document.createElement("div");
         tile.classList.add("tileNew");
         tile.setAttribute("id", presentationObject.id);
+        tile.setAttribute("draggable","true");
 
         var id_p = document.createElement("p");
         id_p.innerHTML = presentationObject.id;
@@ -299,7 +300,6 @@ function changeLabelStatus(presentationID, labelIdentifier) {
 function deletePresentation(presentationID) {
     let conf = confirm("Weet je zeker dat je de presentatie wilt verwijderen?");
     var a = document.getElementById("label"+presentationID).textContent;
-    console.log(a);
     if (conf == true) {
         let url = "http://localhost:"+PORT+"/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
@@ -384,9 +384,7 @@ function postChangedReview(presentationObject) {
         presentationObject.type = document.getElementById("typeTextarea"+presentationObject.id).value;
         presentationObject.duration = document.getElementById("durationTextarea"+presentationObject.id).value;
         console.log(presentationObject);          
-        let changedPresentationObject = { "presentationDraft": { "id":presentationObject.id, "subject":presentationObject.subject, "timeOfCreation":presentationObject.timeOfCreation,
-                                          "summary":presentationObject.summary, "type":presentationObject.type, "duration":presentationObject.duration, "label":presentationObject.label }, 
-                                          "applicants": presentationObject.applicants };
+        let changedPresentationObject = { "presentationDraft": presentationObject };
         xhreq.send(JSON.stringify(changedPresentationObject));
         alert("Voorstel is gewijzigd.");
     }
