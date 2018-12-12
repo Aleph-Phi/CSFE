@@ -72,7 +72,7 @@ function finalizeSelection(){
       }
   }
   xhr.send();
-  }
+}
 
 function showAll() {
     clearSet()
@@ -180,6 +180,12 @@ function presentationListLoop(presentationObject) {
         label_p.setAttribute("id","label"+presentationObject.id);
         label_p.style.display = "none";
         tile.appendChild(label_p);
+
+        var category_p = document.createElement("p");
+        category_p.innerHTML = presentationObject.category;
+        category_p.setAttribute("id","category"+presentationObject.id);
+        category_p.style.display = "none";
+        tile.appendChild(category_p);
 
         document.getElementById("container").appendChild(tile);
         borderColor(presentationObject.id);
@@ -323,7 +329,7 @@ function createButtonsReviewForm(review_window, presentationID) {
     review_window.appendChild(undeterminedButton);
     undeterminedButton.onclick = function() { let labelIdentifier = 4; changeLabelStatus(presentationID, labelIdentifier) };
 
-    addDropdownCategories(presentationID, 2, review_window);
+    review_window.appendChild(createDropdownCategories(presentationID));
 
     let deleteButton = document.createElement("button");
     let text_deleteButton = document.createTextNode("Voorstel verwijderen");
@@ -337,13 +343,14 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.classList.add("generalButton");
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
-    changeButton.onclick = function() { changeReview(presentationID) };
+    changeButton.onclick = function() { changeReview(presentationID, "changeReview") };
 }
 
 //Create categoriesDropdown defined in conference to the presenationReview
-function createDropdown(presentationID, conferenceObject) {
+function createDropdownCategories(presentationID) {
     let categoryDropdown = document.createElement("select");
     categoryDropdown.setAttribute("id","categoryDropdown"+presentationID);
+    categoryDropdown.onchange = function() { changeReview(presentationID, "changeCategory") };
     categoryDropdown.classList.add("categoryDropdown");
 
     let disabledOption = document.createElement("option");
@@ -354,24 +361,26 @@ function createDropdown(presentationID, conferenceObject) {
     let categoriesList = conferenceObject.categories;
     for(let i = 0; i < categoriesList.length; i++) {
         let category = document.createElement("option");
+        if(document.getElementById("category"+presentationID).textContent === categoriesList[i]){
+            category.setAttribute("selected", "selected");
+        }
         category.setAttribute("value",categoriesList[i]);
         let text_category = document.createTextNode(categoriesList[i]);
         category.appendChild(text_category);
         categoryDropdown.appendChild(category);
     }
-    console.log(categoryDropdown);
     return categoryDropdown;
 }
 
-function addDropdownCategories(presentationID, conferenceID, review_window) {
+//Get conferenceObject by id number, variable is saved in properties.js
+function getConferenceById(conferenceID) {
     let xhr = new XMLHttpRequest();
     let url = "http://localhost:"+PORT+"/api/conference/"+conferenceID;
     xhr.open("GET",url,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            let conferenceObject = JSON.parse(this.responseText);
+            conferenceObject = JSON.parse(this.responseText);
             console.log(conferenceObject);
-            review_window.appendChild(createDropdown(presentationID, conferenceObject));
         }
     }
     xhr.send();
@@ -454,15 +463,22 @@ function refreshFieldsDeletion(presentationLabel) {
     }
 }
 
-function changeReview(presentationID) {
+function changeReview(presentationID, functionIdentifier) {
     let xhr = new XMLHttpRequest();
     let url = "http://localhost:"+PORT+"/api/presentationdraft/"+presentationID;
     xhr.open("GET",url,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationObject = JSON.parse(this.responseText);
-                console.log(presentationObject);
-                postChangedReview(presentationObject);
+            console.log(presentationObject);
+            switch(functionIdentifier) {
+                case "changeReview":
+                    postChangedReview(presentationObject);
+                    break;
+                case "changeCategory":
+                    postChangedReviewCategory(presentationObject);
+                    break;
+            }
         }
     }
     xhr.send();
@@ -483,4 +499,15 @@ function postChangedReview(presentationObject) {
         xhreq.send(JSON.stringify(changedPresentationObject));
         alert("Voorstel is gewijzigd.");
     }
+}
+
+function postChangedReviewCategory(presentationObject) {
+    console.log("hallo");
+    let xhreq = new XMLHttpRequest();
+    xhreq.open("POST","http://localhost:"+PORT+"/api/presentationdraft",true);
+    xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    presentationObject.category = document.getElementById("categoryDropdown"+presentationObject.id).value;
+    console.log(presentationObject);          
+    let changedPresentationObject = { "presentationDraft": presentationObject };
+    xhreq.send(JSON.stringify(changedPresentationObject));
 }
