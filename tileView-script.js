@@ -65,7 +65,7 @@ function responseHandler(xhr){
 function finalizeSelection(){
   clearSet()
   let xhr = new XMLHttpRequest();
-  xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/finalize",true); //niet dry - meer flexibiliteit - bijv. vd poort
+  xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/finalize",true);
   xhr.onreadystatechange = function() {
       if(this.readyState == 4){
       responseHandler(xhr);
@@ -77,7 +77,7 @@ function finalizeSelection(){
 function showAll() {
     clearSet()
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
+    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
@@ -323,6 +323,8 @@ function createButtonsReviewForm(review_window, presentationID) {
     review_window.appendChild(undeterminedButton);
     undeterminedButton.onclick = function() { let labelIdentifier = 4; changeLabelStatus(presentationID, labelIdentifier) };
 
+    addDropdownCategories(presentationID, 2, review_window);
+
     let deleteButton = document.createElement("button");
     let text_deleteButton = document.createTextNode("Voorstel verwijderen");
     deleteButton.classList.add("generalButton");
@@ -336,6 +338,43 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
     changeButton.onclick = function() { changeReview(presentationID) };
+}
+
+//Create categoriesDropdown defined in conference to the presenationReview
+function createDropdown(presentationID, conferenceObject) {
+    let categoryDropdown = document.createElement("select");
+    categoryDropdown.setAttribute("id","categoryDropdown"+presentationID);
+    categoryDropdown.classList.add("categoryDropdown");
+
+    let disabledOption = document.createElement("option");
+    let text_disabledOption = document.createTextNode("Kies een categorie");
+    disabledOption.appendChild(text_disabledOption);
+    categoryDropdown.appendChild(disabledOption);
+
+    let categoriesList = conferenceObject.categories;
+    for(let i = 0; i < categoriesList.length; i++) {
+        let category = document.createElement("option");
+        category.setAttribute("value",categoriesList[i]);
+        let text_category = document.createTextNode(categoriesList[i]);
+        category.appendChild(text_category);
+        categoryDropdown.appendChild(category);
+    }
+    console.log(categoryDropdown);
+    return categoryDropdown;
+}
+
+function addDropdownCategories(presentationID, conferenceID, review_window) {
+    let xhr = new XMLHttpRequest();
+    let url = "http://localhost:"+PORT+"/api/conference/"+conferenceID;
+    xhr.open("GET",url,true);
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            let conferenceObject = JSON.parse(this.responseText);
+            console.log(conferenceObject);
+            review_window.appendChild(createDropdown(presentationID, conferenceObject));
+        }
+    }
+    xhr.send();
 }
 
 //Functie voor het aanpassen van een labelStatus
