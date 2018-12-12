@@ -67,7 +67,7 @@ html, body, .container {
     cursor: pointer;
 }
 
-.undeterminedButton {
+.undeterminedButton, .categoryDropdown {
     border: 2px solid gray;
     margin: 15px;
     padding: 10px;
