@@ -3,6 +3,76 @@ function clearSet() {
     myNode.innerHTML = '';
 }
 
+function pageReset(){
+  currentPage=0;
+}
+
+function pagify(showPage){
+document.getElementById("page_nav_container").innerHTML="";
+let pages = Math.floor(currentList.length/DISPLAYLIMIT);
+
+if (currentPage==0 && (currentPage==pages)){
+    limitedIndex=0;
+    loopLimit=currentList.length;
+} else if (currentPage>0 && (currentPage!=pages)){
+    loopLimit=(DISPLAYLIMIT*currentPage)+DISPLAYLIMIT;
+    limitedIndex=DISPLAYLIMIT*currentPage;
+} else if (currentPage>0 && (currentPage==pages)){
+    loopLimit=currentList.length;
+    limitedIndex=DISPLAYLIMIT*currentPage;
+} else {
+    limitedIndex=0;
+    loopLimit=DISPLAYLIMIT;
+}
+
+let page_button_panel=document.createElement("div");
+page_button_panel.classList.add("page_button_panel");
+
+let prevpagecontainer=document.createElement("div");
+prevpagecontainer.classList.add("pageleftcontainer");
+
+let nextpagecontainer=document.createElement("div");
+nextpagecontainer.classList.add("pagerightcontainer");
+
+if (currentPage>0){
+    let prev_page = document.createElement("div");
+    prev_page.classList.add("prevPageButton");
+    prev_page.onclick = function() {showPage(--currentPage)};
+    console.log(currentPage);
+    prevpagecontainer.appendChild(prev_page);
+    page_button_panel.appendChild(prevpagecontainer)
+  }
+
+  if (currentPage!=pages){
+    let next_page = document.createElement("div");
+    next_page.classList.add("nextPageButton");
+    next_page.onclick = function() {showPage(++currentPage)};
+    console.log(currentPage);
+    nextpagecontainer.appendChild(next_page);
+    page_button_panel.appendChild(nextpagecontainer)
+  }
+
+  document.getElementById("page_nav_container").appendChild(page_button_panel);
+
+
+}
+
+function showAll() {
+    clearSet()
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            currentList = JSON.parse(this.responseText);
+            pagify(showAll);
+            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+                    presentationListLoop(currentList[limitedIndex]);
+            }
+        }
+    }
+    xhr.send();
+}
+
 function showUndetermined(otherPresentationList) { //called by showUnlabeled
     let presentationList2=otherPresentationList;
     let xhr = new XMLHttpRequest();
@@ -10,10 +80,10 @@ function showUndetermined(otherPresentationList) { //called by showUnlabeled
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
-            let presentationListCombined=presentationList2.concat(presentationList);
-            console.log(presentationListCombined);
-            for(let j = 0; j < presentationListCombined.length; j++) {
-                    presentationListLoop(presentationListCombined[j]);
+            currentList = presentationList2.concat(presentationList);
+            pagify(showUnlabeled);
+            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+            presentationListLoop(currentList[limitedIndex]);
             }
 
       }
@@ -28,11 +98,7 @@ function showUnlabeled() {
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             let presentationList = JSON.parse(this.responseText);
-            console.log(presentationList);
             showUndetermined(presentationList);
-            // for(let j = 0; j < presentationList.length; j++) {
-            //         presentationListLoop(presentationList[j]);
-            // }
       }
    }
     xhr.send();
@@ -65,7 +131,7 @@ function responseHandler(xhr){
 function finalizeSelection(){
   clearSet()
   let xhr = new XMLHttpRequest();
-  xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/finalize",true); //niet dry - meer flexibiliteit - bijv. vd poort
+  xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/finalize",true);
   xhr.onreadystatechange = function() {
       if(this.readyState == 4){
       responseHandler(xhr);
@@ -74,31 +140,17 @@ function finalizeSelection(){
   xhr.send();
   }
 
-function showAll() {
-    clearSet()
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            let presentationList = JSON.parse(this.responseText);
-            for(let j = 0; j < presentationList.length; j++) {
-                    presentationListLoop(presentationList[j]);
-            }
-        }
-    }
-    xhr.send();
-}
-
 function showDenied() {
     clearSet();
     let xhr = new XMLHttpRequest();
     xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/findbylabel/1",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            let presentationList = JSON.parse(this.responseText);
-            for(let j = 0; j < presentationList.length; j++) {
-                    presentationListLoop(presentationList[j]);
-            }
+            currentList = JSON.parse(this.responseText);
+            pagify(showDenied);
+            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+                presentationListLoop(currentList[limitedIndex]);
+           }
         }
     }
     xhr.send();
@@ -110,10 +162,11 @@ function showAccepted() {
     xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/findbylabel/2",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            let presentationList = JSON.parse(this.responseText);
-            for(let j = 0; j < presentationList.length; j++) {
-                    presentationListLoop(presentationList[j]);
-            }
+            currentList = JSON.parse(this.responseText);
+            pagify(showAccepted);
+            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+                presentationListLoop(currentList[limitedIndex]);
+          }
         }
     }
     xhr.send();
@@ -125,10 +178,11 @@ function showReserved() {
     xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/findbylabel/3",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            let presentationList = JSON.parse(this.responseText);
-            for(let j = 0; j < presentationList.length; j++) {
-                    presentationListLoop(presentationList[j]);
-            }
+            currentList = JSON.parse(this.responseText);
+            pagify(showReserved);
+            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+                presentationListLoop(currentList[limitedIndex]);
+          }
         }
     }
     xhr.send();
@@ -138,6 +192,7 @@ function showReserved() {
 function presentationListLoop(presentationObject) {
         var tile = document.createElement("div");
         tile.classList.add("tileNew");
+        console.log(presentationObject);
         tile.setAttribute("id", presentationObject.id);
 
         var id_p = document.createElement("p");
