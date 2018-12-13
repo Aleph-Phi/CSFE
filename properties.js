@@ -8,3 +8,5 @@ var currentPage=0;
 var currentList=[];
 
 var limitedIndex=0;
+
+var conferenceObject = "";
