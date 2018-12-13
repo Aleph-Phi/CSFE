@@ -99,6 +99,14 @@ html, body, .container {
     padding: 50px 200px;
 }
 
+.containerNav {
+    position: relative;
+    bottom: 47%;
+    width:200px;
+    height: 200px;
+    left: 49%;
+}
+
 .tileNew {
     background-color: rgba(0, 0, 0, .6);
     border-bottom: 5px solid #F1EA36;
