@@ -1,3 +1,5 @@
+window.onload = function() { getConferenceById(1) };
+
 function clearSet() {
     var myNode = document.getElementById("container");
     myNode.innerHTML = '';
@@ -15,7 +17,6 @@ function showUndetermined(otherPresentationList) { //called by showUnlabeled
             for(let j = 0; j < presentationListCombined.length; j++) {
                     presentationListLoop(presentationListCombined[j]);
             }
-
       }
    }
     xhr.send();
@@ -355,6 +356,7 @@ function createDropdownCategories(presentationID) {
 
     let disabledOption = document.createElement("option");
     let text_disabledOption = document.createTextNode("Kies een categorie");
+    disabledOption.setAttribute("value", null);
     disabledOption.appendChild(text_disabledOption);
     categoryDropdown.appendChild(disabledOption);
 
@@ -502,7 +504,6 @@ function postChangedReview(presentationObject) {
 }
 
 function postChangedReviewCategory(presentationObject) {
-    console.log("hallo");
     let xhreq = new XMLHttpRequest();
     xhreq.open("POST","http://localhost:"+PORT+"/api/presentationdraft",true);
     xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
