@@ -11,7 +11,7 @@ function clearPTSet() {
 function showHostTable() {
 	clearHTSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:8082/api/applicant",true);
+    xhr.open("GET","http://api.topiconf.carpago.nl/api/applicant",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             var hostList = JSON.parse(this.responseText);
@@ -43,7 +43,7 @@ function showHostTable() {
 function showPresentationTable() {
 	clearPTSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:8082/api/presentationdraft",true);
+    xhr.open("GET","http://api.topiconf.carpago.nl/api/presentationdraft",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             var presentationList = JSON.parse(this.responseText);
