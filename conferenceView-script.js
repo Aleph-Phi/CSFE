@@ -58,7 +58,7 @@ if (currentPage>0){
 function showAll() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+PORT+"/api/conference",true); //niet dry - meer flexibiliteit - bijv. vd poort
+    xhr.open("GET",SERVER+PORT+"/api/conference",true); 
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             currentList = JSON.parse(this.responseText);
@@ -155,7 +155,7 @@ function conferenceOptions(conferenceObject){
 //Creert en toont het overzichtscherm van de inhoud van een conferentie (na klik op tegel)
 function showConference(conferenceID) {
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+PORT+"/api/conference/"+conferenceID,true); 
+    xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceID,true); 
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             currentList = JSON.parse(this.responseText);
@@ -184,7 +184,7 @@ function determineCollectionSize(conferenceID){
 //Get conferenceObject by id number, variable is saved in properties.js
 function getConferenceById(conferenceID) {
     let xhr = new XMLHttpRequest();
-    let url = "http://localhost:"+PORT+"/api/conference/"+conferenceID;
+    let url = SERVER+PORT+"/api/conference/"+conferenceID;
     xhr.open("GET",url,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
