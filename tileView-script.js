@@ -1,4 +1,5 @@
-function clearSet() {
+
++function clearSet() {
     var myNode = document.getElementById("container");
     myNode.innerHTML = '';
 }
