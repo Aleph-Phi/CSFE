@@ -1,0 +1,32 @@
+.conference_view {
+    background-color: rgba(128,128,128,.95);
+    height: auto;
+    width: 1750px;
+    position: absolute;
+    left: 2%;
+    top: 50px;
+}
+
+.conference_view > p, span {
+    color: white;
+    text-align: left;
+    font-weight: bold;
+    margin-left: 50px;
+}
+
+.conference_view > textarea {
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: rgb(202, 202, 202);
+    color: black;
+    text-align: left;
+    margin-left: 50px;
+    margin-bottom: 20px;
+    width: 1650px;
+    resize: none;
+    display: block;
+}
+
+.conference_view > button {
+    margin: 5px;
+}

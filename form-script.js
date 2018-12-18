@@ -1,11 +1,12 @@
 function postForm() {
     let xhreq = new XMLHttpRequest();
-    xhreq.open("POST","http://localhost:8082/api/presentationdraft",true);
+    xhreq.open("POST",SERVER+PORT+"/api/presentationdraft",true);
     xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
     var subject = document.getElementById("form_subject").value;
     var summary = document.getElementById("form_summary").value;
     var type = document.getElementById("form_type").value;
+    var category = document.getElementById("form_category").value;
     var duration = document.getElementById("form_duration").value;
 
     var name = document.getElementById("form_name").value;
@@ -27,7 +28,7 @@ function postForm() {
         applicants.push(applicant);
     }
 
-    var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "duration":duration },
+    var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "category":category, "duration":duration },
                                       "applicants": applicants };
 
     xhreq.send(JSON.stringify(presentationDraftApplicant));
