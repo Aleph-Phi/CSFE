@@ -105,6 +105,7 @@ function showUnlabeled() {
 function responseHandler(xhr){
   let status=xhr.status;
   let statusText=(xhr.responseText);
+  console.log(xhr);
   switch(status){
       case 200:
               // show new app phase
