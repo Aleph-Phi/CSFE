@@ -1,12 +1,15 @@
 function showCreateConferenceForm() {
+    //SUPERDIV
     let create_conference_window = document.createElement("div");
     create_conference_window.classList.add("form_review");
     create_conference_window.setAttribute("id","create_conference_window");
 
+    //HEADER BOVENAAN
     let header = document.createElement("h3");
     header.innerHTML = "Aanmaken conferentie";
     create_conference_window.appendChild(header);
 
+    //INVULVAK CONFERENTIENAAM
     let conferenceName = document.createElement("span");
     let conferenceNameTextarea = document.createElement("textarea");
     conferenceNameTextarea.setAttribute("id","conferenceNameTextarea");
@@ -14,6 +17,7 @@ function showCreateConferenceForm() {
     create_conference_window.appendChild(conferenceName);
     create_conference_window.appendChild(conferenceNameTextarea);
 
+    //DROPDOWNMENU DETAILS TOEVOEGEN
     let conferentiedetails = document.createElement("div");
     conferentiedetails.classList.add("conferentiedetails");
     let voegdetailstoebutton = document.createElement("button")
@@ -21,6 +25,7 @@ function showCreateConferenceForm() {
     voegdetailstoebutton.appendChild(text_voegdetailstoebutton);
     conferentiedetails.appendChild(voegdetailstoebutton);
     voegdetailstoebutton.onclick = function() {
+
         conferentiedetails.removeChild(voegdetailstoebutton);
         let startdatum = document.createElement("span");
         startdatum.innerHTML = "Startdatum:";
@@ -82,40 +87,65 @@ function showCreateConferenceForm() {
     }
     create_conference_window.appendChild(conferentiedetails);
 
+    //DIV MET DAARIN CONFERENTIE AANMAKEN BUTTON
     let create_conference_sendbutton = document.createElement("div");
     create_conference_sendbutton.classList.add("create_conference_sendbutton");
     create_conference_sendbutton.setAttribute("id","create_conference_sendbutton");
     let sendButton = document.createElement("button");
     let text_sendButton = document.createTextNode("Conferentie aanmaken");
-   
     sendButton.appendChild(text_sendButton);
     create_conference_sendbutton.appendChild(sendButton);
     sendButton.onclick = function() { createConference() };
 
     create_conference_window.appendChild(create_conference_sendbutton);
-
     document.getElementById("form_create_conference").appendChild(create_conference_window);
     
 }
 
 function createConference() {
-    let conf = confirm("Conferentie '"+document.getElementById("conferenceNameTextarea").value+"' aanmaken?");
-    if (conf == true) {
-        let xhreq = new XMLHttpRequest();
-        xhreq.open("POST","http://api.topiconf.carpago.nl/api/conference",true);
-        xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-        var name = document.getElementById("conferenceNameTextarea").value;
-        var startDate = document.getElementById("startdate").value;
-        startDate += ("T00:00:00");
-        var endDate = document.getElementById("enddate").value;
-        endDate += ("T00:00:00");
+    if(document.getElementById("conferenceNameTextarea").value == ""){
+        alert("Je hebt geen naam aan je conferentie gegeven");
+    } else {
+        let conf = confirm("Conferentie '"+document.getElementById("conferenceNameTextarea").value+"' aanmaken?");
+        if (conf == true) {
+            let xhreq = new XMLHttpRequest();
+            xhreq.open("POST","http://api.topiconf.carpago.nl/api/conference",true);
+            xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    
+            var name = document.getElementById("conferenceNameTextarea").value;
+            var startDate;
+            var endDate;
+            
+            if (document.getElementById("startdate") != null){
+                if (document.getElementById("startdate").value != ''){
+                    startDate = document.getElementById("startdate").value;
+                    startDate += ("T00:00:00");
         
-        var conference = {  "name":name, "startDate":startDate, "endDate":endDate };
+                } else {
+                    startDate = null;       
+                }
+            }
 
-        xhreq.send(JSON.stringify(conference));
+            if (document.getElementById("enddate") != null){
+                if (document.getElementById("enddate").value != ""){
+                    endDate = document.getElementById("enddate").value;
+                    endDate += ("T00:00:00");
+        
+                } else {
+                    endDate = null;       
+                }
+            }
+            
+            
+    
+            var conference = {  "name":name, "startDate":startDate, "endDate":endDate };
+    
+            xhreq.send(JSON.stringify(conference));
+    
+            alert("Conferentie is aangemaakt.");
+            document.getElementById("form_create_conference").innerHTML = "";
+        }
 
-        alert("Conferentie is aangemaakt.");
-        document.getElementById("form_create_conference").innerHTML = "";
     }
+   
 }
