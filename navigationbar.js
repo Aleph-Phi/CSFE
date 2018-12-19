@@ -17,10 +17,11 @@ function createButton(innertext, onclick){
 }
 
 function createHomeButton(){
-    var menubalk = deleteAllButtonsNavBar();
-    var createConferenceKnop = document.createElement("button");
-    createConferenceKnop.innerText= "Creëer conferentie";
-    createConferenceKnop.setAttribute("onclick", "showCreateConferenceForm()");
+    deleteAllButtonsNavBar();
+    var createConferenceKnop = createButton("Creëer conferentie", "showCreateConferenceForm()" );
+    //  document.createElement("button");
+    // createConferenceKnop.innerText= "Creëer conferentie";
+    // createConferenceKnop.setAttribute("onclick", "showCreateConferenceForm()");
     
     document.getElementsByClassName("menu")[0].append(createConferenceKnop);
 }
