@@ -1,6 +1,7 @@
 function postForm() {
     let xhreq = new XMLHttpRequest();
-    xhreq.open("POST","http://localhost:"+PORT+"/api/presentationdraft",true);
+
+    xhreq.open("POST",SERVER+PORT+"/api/presentationdraft",true);
     xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
     var subject = document.getElementById("form_subject").value;

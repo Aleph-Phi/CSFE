@@ -99,6 +99,14 @@ html, body, .container {
     padding: 50px 200px;
 }
 
+.containerNav {
+    position: relative;
+    bottom: 47%;
+    width:200px;
+    height: 200px;
+    left: 49%;
+}
+
 .tileNew {
     background-color: rgba(0, 0, 0, .6);
     border-bottom: 5px solid #F1EA36;
@@ -184,7 +192,7 @@ html, body, .container {
     margin: 15px;
     padding: 10px;
     width: 20px;
-    padding: 10px;
+    height: 20px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -213,4 +221,37 @@ html, body, .container {
     height: 40px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.page_button_panel {
+    margin: 0 auto;
+    display: flex;
+    width: 130px;
+    margin-bottom:2%;
+}
+
+.pageleftcontainer {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 25%;
+}
+
+.pagerightcontainer {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    right: 25%;
+}
+
+
+.page_nav_container {
+  position: absolute;
+  top: 75%;
+  right: 45%;
+  margin: 0 auto;
+  display: flex;
+  width: 260px;
+  height: 55px;
+  margin-top:2%;
 }
