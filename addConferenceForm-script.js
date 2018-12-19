@@ -1,7 +1,9 @@
 function showCreateConferenceForm() {
+    document.getElementById("conference_view").innerHTML = "";
+    document.getElementById("container").innerHTML = "";
     //SUPERDIV
     let create_conference_window = document.createElement("div");
-    create_conference_window.classList.add("form_review");
+    create_conference_window.classList.add("form_addconference");
     create_conference_window.setAttribute("id","create_conference_window");
 
     //HEADER BOVENAAN
@@ -20,8 +22,8 @@ function showCreateConferenceForm() {
     //DROPDOWNMENU DETAILS TOEVOEGEN
     let conferentiedetails = document.createElement("div");
     conferentiedetails.classList.add("conferentiedetails");
-    let voegdetailstoebutton = document.createElement("button")
-    let text_voegdetailstoebutton = document.createTextNode("Details toevoegen")
+    let voegdetailstoebutton = document.createElement("button");
+    let text_voegdetailstoebutton = document.createTextNode("Details toevoegen");
     voegdetailstoebutton.appendChild(text_voegdetailstoebutton);
     conferentiedetails.appendChild(voegdetailstoebutton);
     voegdetailstoebutton.onclick = function() {
@@ -33,7 +35,7 @@ function showCreateConferenceForm() {
         let einddatum = document.createElement("span");
         einddatum.innerHTML = "Einddatum:";
         conferentiedetails.appendChild(einddatum);
-        var mybr = document.createElement('br');
+        var mybr = document.createElement("br");
         conferentiedetails.appendChild(mybr);
         let setstartdatum = document.createElement("input");
         setstartdatum.setAttribute("id", "startdate");
@@ -43,12 +45,12 @@ function showCreateConferenceForm() {
         seteinddatum.setAttribute("type", "date");
         conferentiedetails.appendChild(setstartdatum);
         conferentiedetails.appendChild(seteinddatum);
-        var mybr2 = document.createElement('br');
+        var mybr2 = document.createElement("br");
         conferentiedetails.appendChild(mybr2);
         let podia = document.createElement("span");
         podia.innerHTML = "Podia:";
         conferentiedetails.appendChild(podia);
-        var mybr3 = document.createElement('br');
+        var mybr3 = document.createElement("br");
         conferentiedetails.appendChild(mybr3);
        
         var dropdown = document.createElement("select");
@@ -56,7 +58,7 @@ function showCreateConferenceForm() {
         var optie1_text = document.createTextNode("Selecteer aantal podia");
         optie1.appendChild(optie1_text);
         dropdown.appendChild(optie1);
-        var mybr4 = document.createElement('br');
+        var mybr4 = document.createElement("br");
         conferentiedetails.appendChild(mybr4);
         let podiadiv = document.createElement("div");
         conferentiedetails.appendChild(dropdown);
@@ -71,11 +73,12 @@ function showCreateConferenceForm() {
             dropdown.appendChild(optie);
         }
         dropdown.onchange = function () {
+        
             while (podiadiv.firstChild) {
                 podiadiv.removeChild(podiadiv.firstChild);
             }
             for(let t = 1; t <= dropdown.options[dropdown.selectedIndex].id ; t++) {
-                var mybr5 = document.createElement('br');
+                var mybr5 = document.createElement("br");
                 podiadiv.appendChild(mybr5); 
                 let podium = document.createElement("span");
                 podium.innerHTML = "Podium " + t + ":";
@@ -98,18 +101,18 @@ function showCreateConferenceForm() {
     sendButton.onclick = function() { createConference() };
 
     create_conference_window.appendChild(create_conference_sendbutton);
-    document.getElementById("form_create_conference").appendChild(create_conference_window);
+    document.getElementById("conference_view").appendChild(create_conference_window);
     
 }
 
 function createConference() {
     if(document.getElementById("conferenceNameTextarea").value == ""){
-        alert("Je hebt geen naam aan je conferentie gegeven");
+        alert("U heeft geen naam aan uw conferentie gegeven.");
     } else {
         let conf = confirm("Conferentie '"+document.getElementById("conferenceNameTextarea").value+"' aanmaken?");
         if (conf == true) {
             let xhreq = new XMLHttpRequest();
-            xhreq.open("POST","http://api.topiconf.carpago.nl/api/conference",true);
+            xhreq.open("POST",SERVER+PORT+"/api/conference",true);
             xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     
             var name = document.getElementById("conferenceNameTextarea").value;
@@ -117,7 +120,7 @@ function createConference() {
             var endDate;
             
             if (document.getElementById("startdate") != null){
-                if (document.getElementById("startdate").value != ''){
+                if (document.getElementById("startdate").value != ""){
                     startDate = document.getElementById("startdate").value;
                     startDate += ("T00:00:00");
         
@@ -136,14 +139,12 @@ function createConference() {
                 }
             }
             
-            
-    
-            var conference = {  "name":name, "startDate":startDate, "endDate":endDate };
-    
+            var conference = { "name":name, "startDate":startDate, "endDate":endDate };
             xhreq.send(JSON.stringify(conference));
-    
             alert("Conferentie is aangemaakt.");
-            document.getElementById("form_create_conference").innerHTML = "";
+            document.getElementById("conference_view").innerHTML = "";
+            location.reload();
+
         }
 
     }

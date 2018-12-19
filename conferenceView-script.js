@@ -106,15 +106,15 @@ function conferenceListLoop(conferenceObject) {
         deadlinePresentationDraft_p.style.display = "none";
         tile.appendChild(deadlinePresentationDraft_p);
 
-        var terugButton = document.createElement("button");
-        terugButton.setAttribute("value", "nieuwe knop");
+        // var terugButton = document.createElement("button");
+        // terugButton.setAttribute("value", "nieuwe knop");
 
         tile.onclick = function() { 
             conferenceOptions(conferenceObject); 
             deleteAllButtonsNavBar(); 
             var terugknop = createButton("Terug","{deleteAllButtonsNavBar(); createHomeButton(); showAll();}");
             document.getElementsByClassName("menu")[0].append(terugknop);
-        };
+        }
 
         document.getElementById("container").appendChild(tile);
         borderColor(conferenceObject);
@@ -128,16 +128,11 @@ function borderColor(conferenceObject) {
 
     if(huidigedatum > deadlinedatum && huidigedatum < einddatum){
         document.getElementById(conferenceObject.id).style.borderBottomColor = "orange";
-
     }else if(huidigedatum > deadlinedatum && huidigedatum > einddatum){
         document.getElementById(conferenceObject.id).style.borderBottomColor = "red";
     }else{
         document.getElementById(conferenceObject.id).style.borderBottomColor = "green";
     }
-}
-
-function showCreateConferenceForm(){
-    alert("Nog te implementeren.");
 }
 
 //Creeert navigatietiles binnen de conferentie, zoals 'Presentatievoorstellen' en 'Planning'.
@@ -166,31 +161,37 @@ function conferenceOptions(conferenceObject){
     }
 }
 
-//Creert en toont het overzichtscherm van de inhoud van een conferentie (na klik op tegel)
-function showConference(conferenceID) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceID,true); 
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            currentList = JSON.parse(this.responseText);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                    conferenceListLoop(currentList[limitedIndex]);
-            }
-        }
-    }
-    xhr.send();
-}
 
-//Get conferenceObject by id number, variable is saved in properties.js
-function getConferenceById(conferenceID) {
-    let xhr = new XMLHttpRequest();
-    let url = SERVER+PORT+"/api/conference/"+conferenceID;
-    xhr.open("GET",url,true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            conferenceObject = JSON.parse(this.responseText);
-            console.log(conferenceObject);
-        }
-    }
-    xhr.send();
-}
+
+
+
+//ONDERSTAANDE LATER IMPLEMENTEREN/AANPASSEN
+
+//Creert en toont het overzichtscherm van de inhoud van een conferentie (na klik op tegel)
+// function showConference(conferenceID) {
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceID,true); 
+//     xhr.onreadystatechange = function() {
+//         if(this.readyState == 4 && this.status == 200){
+//             currentList = JSON.parse(this.responseText);
+//             for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+//                     conferenceListLoop(currentList[limitedIndex]);
+//             }
+//         }
+//     }
+//     xhr.send();
+// }
+
+// //Get conferenceObject by id number, variable is saved in properties.js
+// function getConferenceById(conferenceID) {
+//     let xhr = new XMLHttpRequest();
+//     let url = SERVER+PORT+"/api/conference/"+conferenceID;
+//     xhr.open("GET",url,true);
+//     xhr.onreadystatechange = function() {
+//         if(this.readyState == 4 && this.status == 200){
+//             conferenceObject = JSON.parse(this.responseText);
+//             console.log(conferenceObject);
+//         }
+//     }
+//     xhr.send();
+// }
