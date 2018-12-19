@@ -8,6 +8,107 @@ html, body, .container {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+.create_conference_sendbutton {
+    height: auto;
+    width: 1750px;
+    left: 2%;
+    top: 150px;
+    text-align: center;
+}
+
+.create_conference_sendbutton > button {
+    border: 2px solid white;
+    margin: 15px;
+    margin-left: 20 px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center
+}
+
+.create_conference_sendbutton > button:hover {
+    background-image: linear-gradient(#F1EA36, darkgoldenrod);
+    transition: 0.3s;
+}
+
+.conferentiedetails {
+    height: auto;
+    width: 1750px;
+    left: 2%;
+    top: 150px;
+}
+
+.conferentiedetails > button {
+    border: 2px solid white;
+    margin-left: 50px; 
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center
+}
+
+.conferentiedetails > textarea {
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: rgb(202, 202, 202);
+    color: black;
+    text-align: left;
+    margin-bottom: 20px;
+    margin-right: 20px; 
+    width: 200px;
+    resize: none;
+    display: inline-block;
+}
+
+.conferentiedetails > input {
+    margin-left: 50px; 
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: rgb(202, 202, 202);
+    color: black;
+    text-align: left;
+    margin-bottom: 20px;
+    margin-right: 20px; 
+    width: 120px;
+    resize: none;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.conferentiedetails > div {
+    height: auto;
+    width: 1750px;
+    left: 2%;
+    top: 150px;
+}
+
+.conferentiedetails > div > textarea {
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: rgb(202, 202, 202);
+    color: black;
+    text-align: left;
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 20px; 
+    width: 1650px;
+    resize: none;
+    display: inherit;
+}
+
+.conferentiedetails > select {
+    margin-left: 50px; 
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: rgb(202, 202, 202);
+    color: black;
+    text-align: left;
+    margin-top: -20px;
+    margin-right: 20px; 
+    width: 160px;
+    resize: none;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
 .menu {
     background-color: gray;
     width: 100%;
@@ -17,6 +118,7 @@ html, body, .container {
 .menu > button {
     border: 2px solid white;
     margin: 15px;
+    margin-left: 20 px;
     padding: 10px;
     border-radius: 5px;
 }
@@ -112,6 +214,7 @@ html, body, .container {
     text-align: left;
     font-weight: bold;
     margin-left: 50px;
+    margin-right: 50px;
 }
 
 .form_review > textarea {
