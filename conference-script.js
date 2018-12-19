@@ -60,7 +60,7 @@ if (currentPage>0){
 function showAll() {
     clearSet();
     let xhr = new XMLHttpRequest();
-    xhr.open("GET","http://localhost:"+PORT+"/api/conference",true); //niet dry - meer flexibiliteit - bijv. vd poort
+    xhr.open("GET",SERVER+PORT+"/api/conference",true); //niet dry - meer flexibiliteit - bijv. vd poort
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             currentList = JSON.parse(this.responseText);
@@ -291,7 +291,7 @@ function createDropdownCategories(presentationID) {
 //Get conferenceObject by id number, variable is saved in properties.js
 function getConferenceById(conferenceID) {
     let xhr = new XMLHttpRequest();
-    let url = "http://localhost:"+PORT+"/api/conference/"+conferenceID;
+    let url = SERVER+PORT+"/api/conference/"+conferenceID;
     xhr.open("GET",url,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
@@ -304,7 +304,7 @@ function getConferenceById(conferenceID) {
 
 //Functie voor het aanpassen van een labelStatus
 function changeLabelStatus(presentationID, labelIdentifier) {
-    let url = "http://localhost:"+PORT+"/api/presentationdraft/"+presentationID+"/label/"+labelIdentifier;
+    let url = SERVER+PORT+"/api/presentationdraft/"+presentationID+"/label/"+labelIdentifier;
     let xhreq = new XMLHttpRequest();
     xhreq.open("POST",url,true);
     xhreq.onreadystatechange = function() {
@@ -321,7 +321,7 @@ function deletePresentation(presentationID) {
     let conf = confirm("Weet je zeker dat je de presentatie wilt verwijderen?");
     var a = document.getElementById("label"+presentationID).textContent;
     if (conf == true) {
-        let url = "http://localhost:"+PORT+"/api/presentationdraft/delete/"+presentationID;
+        let url = SERVER+PORT+"/api/presentationdraft/delete/"+presentationID;
         let xhreq = new XMLHttpRequest();
         xhreq.open("DELETE",url,true);
         xhreq.onreadystatechange = function() {
@@ -381,7 +381,7 @@ function refreshFieldsDeletion(presentationLabel) {
 
 function changeReview(presentationID, functionIdentifier) {
     let xhr = new XMLHttpRequest();
-    let url = "http://localhost:"+PORT+"/api/presentationdraft/"+presentationID;
+    let url = SERVER+PORT+"/api/presentationdraft/"+presentationID;
     xhr.open("GET",url,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
@@ -404,7 +404,7 @@ function postChangedReview(presentationObject) {
     let conf = confirm("Weet je zeker dat je de inhoud wilt wijzigen?");
     if (conf == true) {
         let xhreq = new XMLHttpRequest();
-        xhreq.open("POST","http://localhost:"+PORT+"/api/presentationdraft",true);
+        xhreq.open("POST",SERVER+PORT+"/api/presentationdraft",true);
         xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         presentationObject.subject = document.getElementById("subjectTextarea"+presentationObject.id).value;
         presentationObject.summary = document.getElementById("summaryTextarea"+presentationObject.id).value;
@@ -420,7 +420,7 @@ function postChangedReview(presentationObject) {
 function postChangedReviewCategory(presentationObject) {
     console.log("hallo");
     let xhreq = new XMLHttpRequest();
-    xhreq.open("POST","http://localhost:"+PORT+"/api/presentationdraft",true);
+    xhreq.open("POST",SERVER+PORT+"/api/presentationdraft",true);
     xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     presentationObject.category = document.getElementById("categoryDropdown"+presentationObject.id).value;
     console.log(presentationObject);
