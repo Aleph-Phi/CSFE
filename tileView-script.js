@@ -396,6 +396,19 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
     changeButton.onclick = function() { changeReview(presentationID, "changeReview") };
+
+    let printButton = document.createElement("button");
+    let text_printButton = document.createTextNode("Voorstel printen");
+    printButton.classList.add("generalButton");
+    printButton.appendChild(text_printButton);
+    review_window.appendChild(printButton);
+    printButton.onclick = function() { printPresentation(presentationID) };
+}
+
+function printPresentation(presentationID) {
+    let review_window =document.getElementById("review_window_div"+presentationID);
+    review_window.classList.add("div-print");
+    window.print();
 }
 
 // Create categoriesDropdown defined in conference to the presenationReview
@@ -410,6 +423,7 @@ function createDropdownCategories(presentationID) {
     disabledOption.appendChild(text_disabledOption);
     categoryDropdown.appendChild(disabledOption);
 
+    if (conferenceObject.categories!=null){ // dirty fix requires refinement
     let categoriesList = conferenceObject.categories;
     for(let i = 0; i < categoriesList.length; i++) {
         let category = document.createElement("option");
@@ -421,6 +435,7 @@ function createDropdownCategories(presentationID) {
         category.appendChild(text_category);
         categoryDropdown.appendChild(category);
     }
+  }
     return categoryDropdown;
 }
 

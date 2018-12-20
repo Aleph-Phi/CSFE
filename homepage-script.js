@@ -37,7 +37,7 @@ function showCreateConferenceForm() {
 //         let xhreq = new XMLHttpRequest();
 //         xhreq.open("POST","http://localhost:"+PORT+"/api/conference",true);
 //         xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        
+
 //         let conferenceName = document.getElementById("conferenceNameTextarea").value;
 //         let conferenceDeadline = document.getElementById("deadlineForPresentationDraftTextarea").value;
 
