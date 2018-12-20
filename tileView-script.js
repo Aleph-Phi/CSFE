@@ -465,8 +465,8 @@ function createDropdownCategories(presentationID) {
             category.appendChild(text_category);
             categoryDropdown.appendChild(category);
         }
-        return categoryDropdown;
     }
+    return categoryDropdown;
 }
 
 
