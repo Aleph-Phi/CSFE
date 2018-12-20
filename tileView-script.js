@@ -53,24 +53,52 @@ if (currentPage>0){
 
   document.getElementById("page_nav_container").appendChild(page_button_panel);
 
-
 }
 
 function showAll() {
-    clearSet()
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            currentList = JSON.parse(this.responseText);
-            pagify(showAll);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                    presentationListLoop(currentList[limitedIndex]);
-            }
-        }
+    clearSet();
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+    currentList = conferenceObject.presentationDrafts;
+    pagify(showAll);
+    for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+        presentationListLoop(currentList[limitedIndex]);
     }
-    xhr.send();
 }
+
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("GET",SERVER+PORT+"/api/conference/"+this.conferenceObject.id,true);
+//     xhr.onreadystatechange = function() {
+//         if(this.readyState == 4 && this.status == 200){
+//             document.getElementById("container").innerHTML = "";
+//             var conferenceOb = JSON.parse(this.responseText);
+//             currentList = conferenceObject.presentationDrafts;
+//             pagify(showPresentationDrafts);
+//             for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+//                     presentationListLoop(currentList[limitedIndex]);
+//             }
+//         }
+//     }
+//     xhr.send();
+// }
+
+
+
+
+// function showAll() {
+//     clearSet()
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("GET",SERVER+PORT+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
+//     xhr.onreadystatechange = function() {
+//         if(this.readyState == 4 && this.status == 200){
+//             currentList = JSON.parse(this.responseText);
+//             pagify(showAll);
+//             for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+//                     presentationListLoop(currentList[limitedIndex]);
+//             }
+//         }
+//     }
+//     xhr.send();
+// }
 
 function showUndetermined(otherPresentationList) { //called by showUnlabeled
     let presentationList2=otherPresentationList;
@@ -397,6 +425,19 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
     changeButton.onclick = function() { changeReview(presentationID, "changeReview") };
+
+    let printButton = document.createElement("button");
+    let text_printButton = document.createTextNode("Voorstel printen");
+    printButton.classList.add("generalButton");
+    printButton.appendChild(text_printButton);
+    review_window.appendChild(printButton);
+    printButton.onclick = function() { printPresentation(presentationID) };
+}
+
+function printPresentation(presentationID) {
+    let review_window =document.getElementById("review_window_div"+presentationID);
+    review_window.classList.add("div-print");
+    window.print();
 }
 
 // Create categoriesDropdown defined in conference to the presenationReview
@@ -411,19 +452,23 @@ function createDropdownCategories(presentationID) {
     disabledOption.appendChild(text_disabledOption);
     categoryDropdown.appendChild(disabledOption);
 
-    let categoriesList = conferenceObject.categories;
-    for(let i = 0; i < categoriesList.length; i++) {
-        let category = document.createElement("option");
-        if(document.getElementById("category"+presentationID).textContent === categoriesList[i]){
-            category.setAttribute("selected", "selected");
+
+    if (conferenceObject.categories != null){
+        let categoriesList = conferenceObject.categories;
+        for(let i = 0; i < categoriesList.length; i++) {
+            let category = document.createElement("option");
+            if(document.getElementById("category"+presentationID).textContent === categoriesList[i]){
+                category.setAttribute("selected", "selected");
+            }
+            category.setAttribute("value",categoriesList[i]);
+            let text_category = document.createTextNode(categoriesList[i]);
+            category.appendChild(text_category);
+            categoryDropdown.appendChild(category);
         }
-        category.setAttribute("value",categoriesList[i]);
-        let text_category = document.createTextNode(categoriesList[i]);
-        category.appendChild(text_category);
-        categoryDropdown.appendChild(category);
     }
     return categoryDropdown;
 }
+
 
 //Get conferenceObject by id number, variable is saved in properties.js
 function getConferenceById(conferenceID) {
