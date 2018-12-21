@@ -53,53 +53,24 @@ if (currentPage>0){
 
   document.getElementById("page_nav_container").appendChild(page_button_panel);
 
-
 }
 
-function showAll() {
-    clearSet()
+function showPresentationDrafts(labelwaarde) {
+    pageReset();
+    clearSet();
+    let label = labelwaarde;
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
+    xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceObject.id+"/findpresentationdraft/"+label,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             currentList = JSON.parse(this.responseText);
-            pagify(showAll);
+            pagify(showPresentationDrafts);
             for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                    presentationListLoop(currentList[limitedIndex]);
+                presentationListLoop(currentList[limitedIndex]);
             }
         }
     }
-    xhr.send();
-}
-
-function showUndetermined(otherPresentationList) { //called by showUnlabeled
-    let presentationList2=otherPresentationList;
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/4",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            let presentationList = JSON.parse(this.responseText);
-            currentList = presentationList2.concat(presentationList);
-            pagify(showUnlabeled);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-            presentationListLoop(currentList[limitedIndex]);
-            }
-
-      }
-   }
-    xhr.send();
-}
-
-function showUnlabeled() {
-    clearSet();
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/0",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            let presentationList = JSON.parse(this.responseText);
-            showUndetermined(presentationList);
-      }
-   }
     xhr.send();
 }
 
@@ -122,7 +93,7 @@ function responseHandler(xhr){
                 break;
               } else {
                 alert("There are unlabeled presentation drafts remaining");
-                showUnlabeled(pageReset());
+                showPresentationDrafts(0);
                 break;
               }
            }
@@ -138,54 +109,6 @@ function finalizeSelection(){
       }
   }
   xhr.send();
-}
-
-function showDenied() {
-    clearSet();
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/1",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            currentList = JSON.parse(this.responseText);
-            pagify(showDenied);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                presentationListLoop(currentList[limitedIndex]);
-           }
-        }
-    }
-    xhr.send();
-}
-
-function showAccepted() {
-    clearSet();
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/2",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            currentList = JSON.parse(this.responseText);
-            pagify(showAccepted);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                presentationListLoop(currentList[limitedIndex]);
-          }
-        }
-    }
-    xhr.send();
-}
-
-function showReserved() {
-    clearSet();
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/3",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            currentList = JSON.parse(this.responseText);
-            pagify(showReserved);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                presentationListLoop(currentList[limitedIndex]);
-          }
-        }
-    }
-    xhr.send();
 }
 
 //Loopt over de objecten om de tegels aan te maken met de betreffende info
@@ -397,6 +320,19 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
     changeButton.onclick = function() { changeReview(presentationID, "changeReview") };
+
+    let printButton = document.createElement("button");
+    let text_printButton = document.createTextNode("Voorstel printen");
+    printButton.classList.add("generalButton");
+    printButton.appendChild(text_printButton);
+    review_window.appendChild(printButton);
+    printButton.onclick = function() { printPresentation(presentationID) };
+}
+
+function printPresentation(presentationID) {
+    let review_window =document.getElementById("review_window_div"+presentationID);
+    review_window.classList.add("div-print");
+    window.print();
 }
 
 // Create categoriesDropdown defined in conference to the presenationReview
@@ -411,19 +347,23 @@ function createDropdownCategories(presentationID) {
     disabledOption.appendChild(text_disabledOption);
     categoryDropdown.appendChild(disabledOption);
 
-    let categoriesList = conferenceObject.categories;
-    for(let i = 0; i < categoriesList.length; i++) {
-        let category = document.createElement("option");
-        if(document.getElementById("category"+presentationID).textContent === categoriesList[i]){
-            category.setAttribute("selected", "selected");
+
+    if (conferenceObject.categories != null){
+        let categoriesList = conferenceObject.categories;
+        for(let i = 0; i < categoriesList.length; i++) {
+            let category = document.createElement("option");
+            if(document.getElementById("category"+presentationID).textContent === categoriesList[i]){
+                category.setAttribute("selected", "selected");
+            }
+            category.setAttribute("value",categoriesList[i]);
+            let text_category = document.createTextNode(categoriesList[i]);
+            category.appendChild(text_category);
+            categoryDropdown.appendChild(category);
         }
-        category.setAttribute("value",categoriesList[i]);
-        let text_category = document.createTextNode(categoriesList[i]);
-        category.appendChild(text_category);
-        categoryDropdown.appendChild(category);
     }
     return categoryDropdown;
 }
+
 
 //Get conferenceObject by id number, variable is saved in properties.js
 function getConferenceById(conferenceID) {
@@ -489,29 +429,29 @@ function borderColor(presentationID) {
 //Functie voor het refreshen van de fields nadat een label gewijzigd is
 function refreshFields(presentationID) {
     if(document.getElementById("label"+presentationID).textContent === "ACCEPTED"){
-        showAccepted();
+        showPresentationDrafts(2);
     } else if (document.getElementById("label"+presentationID).textContent === "DENIED"){
-        showDenied();
+        showPresentationDrafts(1);
     } else if (document.getElementById("label"+presentationID).textContent === "RESERVED"){
-        showReserved();
+        showPresentationDrafts(3);
     } else if (document.getElementById("label"+presentationID).textContent === "UNDETERMINED"){
-        showUnlabeled();
+        showPresentationDrafts(4);
     } else if (document.getElementById("label"+presentationID).textContent === "UNLABELED"){
-        showUnlabeled();
+        showPresentationDrafts(0);
     }
 }
 
 function refreshFieldsDeletion(presentationLabel) {
     if(presentationLabel === "ACCEPTED"){
-        showAccepted();
+        showPresentationDrafts(2);
     } else if (presentationLabel === "DENIED"){
-        showDenied();
+        showPresentationDrafts(1);
     } else if (presentationLabel === "RESERVED"){
-        showReserved();
+        showPresentationDrafts(3);
     } else if (presentationLabel === "UNDETERMINED"){
-        showUnlabeled();
+        showPresentationDrafts(4);
     } else if (presentationLabel === "UNLABELED"){
-        showUnlabeled();
+        showPresentationDrafts(0);
     }
 }
 

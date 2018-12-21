@@ -4,18 +4,19 @@
     <link rel="stylesheet" href="tileView-mystyle.css">
     <script type="text/javascript" src="properties.js"></script>
     <script type="text/javascript" src="tileView-script.js"></script>
+    <script type="application/javascript" src="jquery-3.3.1.min.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="images/topiconficon.png"/>
     <meta charset="utf-8">
     <title>PresentatieApp</title>
 </head>
 
-<body onload=getConferenceById(1)>
+<body>
     <div class="menu">
-        <button onclick=showAll(pageReset())>Toon alle</button>
-        <button onclick=showUnlabeled(pageReset())>Toon openstaand</button>
-        <button onclick=showAccepted(pageReset())>Toon goedgekeurd</button>
-        <button onclick=showReserved(pageReset())>Toon reserve</button>
-        <button onclick=showDenied(pageReset())>Toon afgewezen</button>
+        <button onclick=showPresentationDrafts(5)>Toon alle</button>
+        <button onclick=showPresentationDrafts(0)>Toon openstaand</button>
+        <button onclick=showPresentationDrafts(2)>Toon goedgekeurd</button>
+        <button onclick=showPresentationDrafts(3)>Toon reserve</button>
+        <button onclick=showPresentationDrafts(1)>Toon afgewezen</button>
         <button onclick=finalizeSelection()>Selectie definitief maken</button>
     </div>
 
