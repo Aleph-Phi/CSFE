@@ -12,11 +12,11 @@
 
 <body>
     <div class="menu">
-        <button onclick=showAll(pageReset())>Toon alle</button>
-        <button onclick=showUnlabeled(pageReset())>Toon openstaand</button>
-        <button onclick=showAccepted(pageReset())>Toon goedgekeurd</button>
-        <button onclick=showReserved(pageReset())>Toon reserve</button>
-        <button onclick=showDenied(pageReset())>Toon afgewezen</button>
+        <button onclick=showPresentationDrafts(5)>Toon alle</button>
+        <button onclick=showPresentationDrafts(0)>Toon openstaand</button>
+        <button onclick=showPresentationDrafts(2)>Toon goedgekeurd</button>
+        <button onclick=showPresentationDrafts(3)>Toon reserve</button>
+        <button onclick=showPresentationDrafts(1)>Toon afgewezen</button>
         <button onclick=finalizeSelection()>Selectie definitief maken</button>
     </div>
 
