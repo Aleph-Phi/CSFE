@@ -375,39 +375,49 @@ function generatePageNavigators(review_window, presentationID){
 
 //Ontwerp knoppen van het reviewForm
 function createButtonsReviewForm(review_window, presentationID) {
-    let backButton = document.createElement("button");
+    let buttonGroup = document.createElement("div");
+    buttonGroup.classList.add("btn-group");
+
+    let backButton = document.createElement("div");
     let text_backButton = document.createTextNode("Terug");
-    backButton.classList.add("backButton");
+    backButton.classList.add("btn");
+    backButton.classList.add("btn-outline-light");
     backButton.appendChild(text_backButton);
-    review_window.appendChild(backButton);
+buttonGroup.appendChild(backButton);
     backButton.onclick = function() { document.getElementById("form_review").innerHTML = ''; refreshFields(presentationID) };
 
-    let acceptButton = document.createElement("button");
+    let acceptButton = document.createElement("div");
     let text_acceptButton = document.createTextNode("Voorstel accepteren");
-    acceptButton.classList.add("acceptButton");
+    acceptButton.classList.add("btn");
+    acceptButton.classList.add("btn-primary");
     acceptButton.appendChild(text_acceptButton);
-    review_window.appendChild(acceptButton);
+ buttonGroup.appendChild(acceptButton);
     acceptButton.onclick = function() { let labelIdentifier = 2; changeLabelStatus(presentationID, labelIdentifier) };
 
-    let reserveButton = document.createElement("button");
+    let reserveButton = document.createElement("div");
     let text_reserveButton = document.createTextNode("Voorstel op reserve");
-    reserveButton.classList.add("reserveButton");
+    reserveButton.classList.add("btn");
+    reserveButton.classList.add("btn-primary");
     reserveButton.appendChild(text_reserveButton);
-    review_window.appendChild(reserveButton);
+buttonGroup.appendChild(reserveButton);
     reserveButton.onclick = function() { let labelIdentifier = 3; changeLabelStatus(presentationID, labelIdentifier) };
 
-    let deniedButton = document.createElement("button");
+ review_window.appendChild(buttonGroup);
+
+    let deniedButton = document.createElement("div");
     let text_deniedButton = document.createTextNode("Voorstel afwijzen");
-    deniedButton.classList.add("deniedButton");
+    deniedButton.classList.add("btn");
+    deniedButton.classList.add("btn-primary");
     deniedButton.appendChild(text_deniedButton);
-    review_window.appendChild(deniedButton);
+    buttonGroup.appendChild(deniedButton);
     deniedButton.onclick = function() { let labelIdentifier = 1; changeLabelStatus(presentationID, labelIdentifier) };
 
-    let undeterminedButton = document.createElement("button");
+    let undeterminedButton = document.createElement("div");
     let text_undeterminedButton = document.createTextNode("Voorstel to-do");
-    undeterminedButton.classList.add("undeterminedButton");
+    undeterminedButton.classList.add("btn");
+    undeterminedButton.classList.add("btn-primary");
     undeterminedButton.appendChild(text_undeterminedButton);
-    review_window.appendChild(undeterminedButton);
+    buttonGroup.appendChild(undeterminedButton);
     undeterminedButton.onclick = function() { let labelIdentifier = 4; changeLabelStatus(presentationID, labelIdentifier) };
 
     review_window.appendChild(createDropdownCategories(presentationID));
