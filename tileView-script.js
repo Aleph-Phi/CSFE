@@ -6,7 +6,7 @@
 
 function clearSet() {
     var myNode = document.getElementById("container");
-    myNode.innerHTML = '';
+    myNode.innerHTML = ''; // anders
 }
 
 function showAll() { //test met currentpage multi
@@ -134,7 +134,7 @@ function presentationListLoop(presentationObject) {
         var duration_p = document.createElement("p");
         duration_p.innerHTML = presentationObject.duration;
         duration_p.setAttribute("id","duration"+presentationObject.id);
-        duration_p.style.display = "none";
+        duration_p.style.display = "block";
         tile.appendChild(duration_p);
 
         var time_of_creation_p = document.createElement("p");
@@ -152,6 +152,7 @@ function presentationListLoop(presentationObject) {
         document.getElementById("container").appendChild(tile);
         borderColor(presentationObject.id);
         tile.onclick = function() { showFormReview(this.id) };
+        console.log(tile);
         // let x=presentationList[i];  // new
         // tilecounter.push(presentationList[i]);
         // console.log(tilecounter.length); //new
@@ -301,7 +302,9 @@ function borderColor(presentationID) {
     } else if (document.getElementById("label"+presentationID).textContent === "UNLABELED"){
         document.getElementById(presentationID).style.borderBottomColor = "gray";
     }
-}
+    document.getElementById(presentationID).style.borderBottomColor = "blue";
+    }
+
 
 //Functie voor het refreshen van de fields nadat een label gewijzigd is
 function refreshFields(presentationID) {
