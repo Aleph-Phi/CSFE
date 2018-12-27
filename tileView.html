@@ -2,22 +2,28 @@
 
 <head>
     <link rel="stylesheet" href="tileView-mystyle.css">
+    <script type="text/javascript" src="properties.js"></script>
     <script type="text/javascript" src="tileView-script.js"></script>
-
+    <script type="application/javascript" src="jquery-3.3.1.min.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="images/topiconficon.png"/>
+    <meta charset="utf-8">
     <title>PresentatieApp</title>
 </head>
 
 <body>
     <div class="menu">
-        <button onclick=showAll()>Toon alle</button>
-        <button onclick=showUnlabeled()>Toon openstaand</button>
-        <button onclick=showAccepted()>Toon goedgekeurd</button>
-        <button onclick=showReserved()>Toon Reserve</button>
-        <button onclick=showDenied()>Toon afgewezen</button>
+        <button onclick=showPresentationDrafts(5)>Toon alle</button>
+        <button onclick=showPresentationDrafts(0)>Toon openstaand</button>
+        <button onclick=showPresentationDrafts(2)>Toon goedgekeurd</button>
+        <button onclick=showPresentationDrafts(3)>Toon reserve</button>
+        <button onclick=showPresentationDrafts(1)>Toon afgewezen</button>
+        <button onclick=finalizeSelection()>Selectie definitief maken</button>
     </div>
 
     <div class="container" id="container">                       </div>
-
+    <div class="containerNav" id="pncc">
+    <div class="page_nav_container" id="page_nav_container">     </div>
+    </div>
     <div class="form_review" id="form_review"></div>
 
 </body>

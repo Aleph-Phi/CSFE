@@ -1,7 +1,7 @@
 html, body, .container {
     background-image: url("images/topiConf.png");
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: cover;
     background-attachment: fixed;
     height: 100%;
     min-height: 100%;
@@ -67,7 +67,7 @@ html, body, .container {
     cursor: pointer;
 }
 
-.undeterminedButton {
+.undeterminedButton, .categoryDropdown {
     border: 2px solid gray;
     margin: 15px;
     padding: 10px;
@@ -99,12 +99,21 @@ html, body, .container {
     padding: 50px 200px;
 }
 
+.containerNav {
+    position: relative;
+    bottom: 47%;
+    width:200px;
+    height: 200px;
+    left: 49%;
+}
+
 .tileNew {
     background-color: rgba(0, 0, 0, .6);
     border-bottom: 5px solid #F1EA36;
     font-size: 12;
     width: 150px;
     height: 100px;
+    vertical-align: top;
     border-radius: 15px;
     cursor: pointer;
     margin: 5px;
@@ -160,34 +169,104 @@ html, body, .container {
     margin: 5px;
 }
 
-/* next page implementation follows */
-
-.next_page {
-    border: 2px solid red;
-    /* background-image: url(images/nextpage.png); */
+.nextPageButton {
+    border: 2px solid black;
     background-color: rgb(21, 107, 10) ;
-    width: 25px;
-    height: 25px;
+    background-image:url("images/nextpage.jpg");
+    background-repeat: no-repeat;
+    background-size: contain;
     margin: 15px;
     padding: 10px;
+    width: 20px;
+    height: 20px;
     border-radius: 5px;
     cursor: pointer;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 3%;
+  }
+
+.prevPageButton {
+    background-color: rgb(105, 16, 7) ;
+    border: 2px solid black;
+    background-image:url("images/prevpage.jpg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin: 15px;
+    padding: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.prev_page {
-    border: 2px solid red;
-    /* background-image: url(images/nextpage.png); */
-    background-color: rgb(105, 16, 7) ;
-    width: 25px;
-    height: 25px;
-    margin: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
+.nextPageButton:hover {
+    background-color: rgba(0,128,0,.3);
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+.prevPageButton:hover {
+    background-color: rgba(0,128,0,.3);
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+.form_navigator_panel {
+    margin: 0 auto;
+    display: flex;
+    width: 130px;
+    margin-bottom:2%;
+}
+
+.pagebuttoncontainer {
+    width: 40px;
+    height: 40px;
     margin-left: auto;
     margin-right: auto;
-    bottom:0;
+}
+
+.page_button_panel {
+    margin: 0 auto;
+    display: flex;
+    width: 130px;
+    margin-bottom:2%;
+}
+
+.pageleftcontainer {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 25%;
+}
+
+.pagerightcontainer {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    right: 25%;
+}
+
+
+.page_nav_container {
+  position: absolute;
+  top: 75%;
+  right: 45%;
+  margin: 0 auto;
+  display: flex;
+  width: 260px;
+  height: 55px;
+  margin-top:2%;
+}
+
+
+/*Test follows https://stackoverflow.com/questions/16894683/how-to-print-html-content-on-click-of-a-button-but-not-the-page */
+
+.div-print {
+    display: none;
+}
+@media print {
+   .div-screen {
+       display: none;
+    }
+    .div-print {
+       display: block;
+    }
 }

@@ -1,11 +1,12 @@
 function postForm() {
     let xhreq = new XMLHttpRequest();
-    xhreq.open("POST","http://localhost:8082/api/presentationdraft",true);
+    xhreq.open("POST",SERVER+PORT+"/api/presentationdraft",true);
     xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
     var subject = document.getElementById("form_subject").value;
     var summary = document.getElementById("form_summary").value;
     var type = document.getElementById("form_type").value;
+    var category = document.getElementById("form_category").value;
     var duration = document.getElementById("form_duration").value;
 
     var name = document.getElementById("form_name").value;
@@ -27,7 +28,7 @@ function postForm() {
         applicants.push(applicant);
     }
 
-    var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "duration":duration },
+    var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "category":category, "duration":duration },
                                       "applicants": applicants };
 
     xhreq.send(JSON.stringify(presentationDraftApplicant));
@@ -51,6 +52,9 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
         document.getElementById("extra").appendChild(div1);
         var field1 = document.createElement("input");
         field1.setAttribute("id", "form_name"+i);
+        field1.setAttribute("required", "required");
+        field1.setAttribute("oninvalid", "setCustomValidity('Dit veld is verplicht.')");
+        field1.setAttribute("oninput", "setCustomValidity('')");
         document.getElementById("extra").appendChild(field1);
 
         var div2 = document.createElement("div");
@@ -59,6 +63,9 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
         document.getElementById("extra").appendChild(div2);
         var field2 = document.createElement("input");
         field2.setAttribute("id", "form_email"+i);
+        field2.setAttribute("required", "required");
+        field2.setAttribute("oninvalid", "setCustomValidity('Dit veld is verplicht.')");
+        field2.setAttribute("oninput", "setCustomValidity('')");
         document.getElementById("extra").appendChild(field2);
     }
 }
