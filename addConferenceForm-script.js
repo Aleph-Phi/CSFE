@@ -140,7 +140,6 @@ function showCreateConferenceForm() {
 
                     let textareaCategory = document.createElement("textarea");
                     textareaCategory.setAttribute("id", "textareaCategory" + t);
-                    textareaCategory.setAttribute('onclick','go(this)');
 
                     categorydiv.appendChild(textareaCategory); 
                 }
@@ -221,28 +220,21 @@ function createConference() {
 
             for(n=0;n<10;n++){
                 if(document.getElementById("textareaCategory"+(n+1)) != null){
-                    console.log(document.getElementById("textareaCategory"+ (n+1)).value);
                     allCategories.add(document.getElementById("textareaCategory"+(n+1)).value);
 
                 }
             }
-            console.log(allCategories);
 
             
             var conference = { "name":name, "startDate":startDate, "endDate":endDate, "deadlinePresentationDraft":deadlinePresentationDraft, "categories": Array.from(allCategories) };
-            console.log(JSON.stringify(conference));
             
             xhreq.send(JSON.stringify(conference));
             alert("Conferentie is aangemaakt.");
             document.getElementById("conference_view").innerHTML = "";
-            //location.reload();
+            location.reload();
 
         }
 
     }
    
-}
-function go(elem){
-    console.log(document.getElementById("textareaCategory5").value);
-    console.log(elem.value);
 }
