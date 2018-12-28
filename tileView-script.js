@@ -327,6 +327,27 @@ function createButtonsReviewForm(review_window, presentationID) {
     printButton.appendChild(text_printButton);
     review_window.appendChild(printButton);
     printButton.onclick = function() { printPresentation(presentationID) };
+
+    let saveButton = document.createElement("button");
+    let text_saveButton = document.createTextNode("Voorstel opslaan");
+    saveButton.classList.add("generalButton");
+    saveButton.appendChild(text_saveButton);
+    review_window.appendChild(saveButton);
+    saveButton.onclick = function() { savePresentation(presentationID) };
+}
+
+function savePresentation(presentationID){
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET",SERVER+PORT+"/api/pdf/"+presentationID,true);
+    //xhr.setRequestHeader("Content-Type", "application/pdf;charset=UTF-8");
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            alert("De pdf van presentatie " + presentationID + " wordt gedownload.");
+            //new Object().setwindow.location.setAttribute(download) = SERVER+PORT+"/api/pdf/"+presentationID;
+            //currentList = JSON.parse(this.responseText);
+          }
+        }
+    xhr.send();
 }
 
 function printPresentation(presentationID) {

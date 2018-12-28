@@ -11,4 +11,8 @@ var limitedIndex=0;
 
 var conferenceObject = {};
 
-var SERVER="http://localhost:8082";
+
+//var SERVER="http://localhost:8082";
+
+var SERVER="http://api.topiconf.carpago.nl";
+
