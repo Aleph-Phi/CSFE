@@ -575,8 +575,9 @@ function loadAllCategories(){
 
 
 function loadDraftsWithCategory(){
-    document.getElementById("categoryDropdown").value;
-    alert("HOI! " + num);
+    var gekozentrack = document.getElementById("categoryDropdown").value;
+
+    alert("HOI! " + gekozentrack);
 //     // 1. Get all presentationdrafts from conference "ID" with category "Selected value from dropdown"
 //     // 2. 
 
