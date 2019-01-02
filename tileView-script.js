@@ -99,7 +99,7 @@ function responseHandler(xhr){
            }
 }
 
-function finalizeSelection(){
+function finalizeSelection(){ // moet vervangen worden met de methode hieronder
   clearSet()
   let xhr = new XMLHttpRequest();
   xhr.open("GET",SERVER+PORT+"/api/presentationdraft/finalize",true);
@@ -110,6 +110,19 @@ function finalizeSelection(){
   }
   xhr.send();
 }
+
+
+// function finalizeSelection(){
+//     clearSet()
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceObject.id+"/finalize",true);
+//     xhr.onreadystatechange = function() {
+//         if(this.readyState == 4){
+//         responseHandler(xhr);
+//         }
+//     }
+//     xhr.send();
+//   }
 
 //Loopt over de objecten om de tegels aan te maken met de betreffende info
 function presentationListLoop(presentationObject) {
@@ -327,6 +340,13 @@ function createButtonsReviewForm(review_window, presentationID) {
     printButton.appendChild(text_printButton);
     review_window.appendChild(printButton);
     printButton.onclick = function() { printPresentation(presentationID) };
+
+    let mailButton = document.createElement("button");
+    let text_mailButton = document.createTextNode("Applicanten mailen");
+    mailButton.classList.add("generalButton");
+    mailButton.appendChild(text_mailButton);
+    review_window.appendChild(mailButton);
+    mailButton.onclick = function() { sendMail() };
 }
 
 function printPresentation(presentationID) {
@@ -498,4 +518,8 @@ function postChangedReviewCategory(presentationObject) {
     presentationObject.category = document.getElementById("categoryDropdown"+presentationObject.id).value;
     let changedPresentationObject = { "presentationDraft": presentationObject };
     xhreq.send(JSON.stringify(changedPresentationObject));
+}
+
+function sendMail () {
+    window.open('mailview.html', '_blank', 'width=800px, height=600px');
 }
