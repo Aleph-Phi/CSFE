@@ -171,6 +171,8 @@ function presentationListLoop(presentationObject) {
 
 //Creert en toont het overzichtscherm van de inhoud van een presentatie (na klik op tegel)
 function showFormReview(presentationID) {
+    document.getElementById("categoryDropdown").selectedIndex = 0;
+
     let review_window = document.createElement("div");
     review_window.classList.add("form_review");
     createButtonsReviewForm(review_window, presentationID);
@@ -557,11 +559,12 @@ function saveAllPresentationDrafts(){                                  // not co
 }
 
 function loadAllCategories(){
+
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     var catDropdown = document.getElementById("categoryDropdown");
 
     let disabledOption = document.createElement("option");
-    let text_disabledOption = document.createTextNode("Kies een categorie");
+    let text_disabledOption = document.createTextNode("Toon alle");
     disabledOption.setAttribute("value", "optie"+0);
 
     disabledOption.appendChild(text_disabledOption);
@@ -574,35 +577,41 @@ function loadAllCategories(){
         optie.appendChild(text_optie);
 
         optie.setAttribute("onchange", "showPresentationDraftsByCategory(" + catDropdown.getAttribute("value") + ")");
-        console.log(catDropdown.getAttribute("value") + " is gekozen");
+        //console.log(catDropdown.getAttribute("value") + " is gekozen");
         catDropdown.appendChild(optie); 
     }
 
+    catDropdown.selectedIndex = 0;
 }
+
 
 function showPresentationDraftsByCategory(categoryDropdown){
     var categoryValue = categoryDropdown.options[categoryDropdown.selectedIndex].innerText;
-    console.log("Hier is categoryDropdown: " + categoryValue);
+    var newCatValue = "";
+    for(j=0; j<categoryValue.length;j++){
+        if(categoryValue.charAt(j) != " "){
+            newCatValue = newCatValue.concat(categoryValue.charAt(j));
+        }else{
+           newCatValue = newCatValue.concat('%20');
+        }
+    }
+
+    console.log("Hier is categoryDropdown: " + categoryValue + ". CategoryNieuw: " + newCatValue);
     pageReset();
     clearSet();
-    console.log("container is geleegd.");
 
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
-    console.log("gekozen track ID: " + categoryValue + "gekozen conference: " + conferenceObject.id);
-    console.log("TEST: "+ SERVER+PORT+"/api/conference/"+conferenceObject.id+"/findpresentationdraftsbycategory/"+categoryValue);
+    // console.log("TEST: "+ SERVER+PORT+"/api/conference/"+conferenceObject.id+"/findpresentationdraftsbycategory/"+categoryValue);
 
     let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceObject.id+"/findpresentationdraftsbycategory/"+categoryValue,true);
-    console.log("TEST: b2");
+    //xhr.open("POST",SERVER+PORT+"/api/conference/"+6+"/findpresentationdraftsbycategory/" + newCatValue,true);
+    xhr.open("GET",SERVER+PORT+"/api/findpresentationdraftsbycategory?id="+conferenceObject.id+"&category=\"" + newCatValue + "\"",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            console.log("TEST: b1");
             currentList = JSON.parse(this.responseText);
             pagify(showPresentationDraftsByCategory);
-            console.log("TEST: b");
             for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
                 presentationListLoop(currentList[limitedIndex]);
-                console.log("TEST: c");
             }
         }
     }
