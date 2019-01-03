@@ -100,9 +100,10 @@ function responseHandler(xhr){
 }
 
 function finalizeSelection(){
-  clearSet()
+  clearSet();
+  conferenceObject = JSON.parse(sessionStorage.conferenceObject);
   let xhr = new XMLHttpRequest();
-  xhr.open("GET",SERVER+PORT+"/api/presentationdraft/finalize",true);
+  xhr.open("GET",SERVER+PORT+"/api/" + conferenceObject.id + "/presentationdraft/finalize",true);
   xhr.onreadystatechange = function() {
       if(this.readyState == 4){
       responseHandler(xhr);
