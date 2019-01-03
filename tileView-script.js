@@ -558,36 +558,53 @@ function saveAllPresentationDrafts(){                                  // not co
 
 function loadAllCategories(){
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+    var catDropdown = document.getElementById("categoryDropdown");
 
     let disabledOption = document.createElement("option");
     let text_disabledOption = document.createTextNode("Kies een categorie");
+    disabledOption.setAttribute("value", "optie"+0);
+
     disabledOption.appendChild(text_disabledOption);
-    document.getElementById("categoryDropdown").appendChild(disabledOption);
+    catDropdown.appendChild(disabledOption);
 
     for(i=0;i<conferenceObject.categories.length; i++){
         let optie = document.createElement("option");
         let text_optie = document.createTextNode(conferenceObject.categories[i]);
+        optie.setAttribute("value", text_optie+ "_" +(i+1));
         optie.appendChild(text_optie);
-        optie.setAttribute("onchange", "loadDraftsWithCategory(" + (i+1) + ")");
-        document.getElementById("categoryDropdown").appendChild(optie); 
+
+        optie.setAttribute("onchange", "showPresentationDraftsByCategory(" + catDropdown.getAttribute("value") + ")");
+        console.log(catDropdown.getAttribute("value") + " is gekozen");
+        catDropdown.appendChild(optie); 
     }
+
 }
 
+function showPresentationDraftsByCategory(categoryDropdown){
+    var categoryValue = categoryDropdown.options[categoryDropdown.selectedIndex].innerText;
+    console.log("Hier is categoryDropdown: " + categoryValue);
+    pageReset();
+    clearSet();
+    console.log("container is geleegd.");
 
-function loadDraftsWithCategory(){
-    var gekozentrack = document.getElementById("categoryDropdown").value;
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+    console.log("gekozen track ID: " + categoryValue + "gekozen conference: " + conferenceObject.id);
+    console.log("TEST: "+ SERVER+PORT+"/api/conference/"+conferenceObject.id+"/findpresentationdraftsbycategory/"+categoryValue);
 
-    alert("HOI! " + gekozentrack);
-//     // 1. Get all presentationdrafts from conference "ID" with category "Selected value from dropdown"
-//     // 2. 
-
-//     let categoryDropdown = document.createElement("select");
-//     categoryDropdown.setAttribute("id","categoryDropdown"+presentationID);
-//     categoryDropdown.onchange = function() { changeReview(presentationID, "changeCategory") };
-//     categoryDropdown.classList.add("categoryDropdown");
-
-//     let disabledOption = document.createElement("option");
-//     let text_disabledOption = document.createTextNode("Kies een categorie");
-//     disabledOption.appendChild(text_disabledOption);
-//     categoryDropdown.appendChild(disabledOption);
- }
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceObject.id+"/findpresentationdraftsbycategory/"+categoryValue,true);
+    console.log("TEST: b2");
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            console.log("TEST: b1");
+            currentList = JSON.parse(this.responseText);
+            pagify(showPresentationDraftsByCategory);
+            console.log("TEST: b");
+            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+                presentationListLoop(currentList[limitedIndex]);
+                console.log("TEST: c");
+            }
+        }
+    }
+    xhr.send(); 
+}
