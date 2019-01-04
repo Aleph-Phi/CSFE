@@ -112,6 +112,19 @@ function finalizeSelection(){
   xhr.send();
 }
 
+
+// function finalizeSelection(){
+//     clearSet()
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceObject.id+"/finalize",true);
+//     xhr.onreadystatechange = function() {
+//         if(this.readyState == 4){
+//         responseHandler(xhr);
+//         }
+//     }
+//     xhr.send();
+//   }
+
 //Loopt over de objecten om de tegels aan te maken met de betreffende info
 function presentationListLoop(presentationObject) {
         var tile = document.createElement("div");
@@ -331,6 +344,13 @@ function createButtonsReviewForm(review_window, presentationID) {
     review_window.appendChild(printButton);
     printButton.onclick = function() { printPresentation(presentationID) };
 
+    let mailButton = document.createElement("button");
+    let text_mailButton = document.createTextNode("Applicanten mailen");
+    mailButton.classList.add("generalButton");
+    mailButton.appendChild(text_mailButton);
+    review_window.appendChild(mailButton);
+    mailButton.onclick = function() { sendMail() };
+
     let saveButton = document.createElement("button");
     let text_saveButton = document.createTextNode("Voorstel opslaan");
     saveButton.classList.add("generalButton");
@@ -520,6 +540,10 @@ function postChangedReviewCategory(presentationObject) {
     xhreq.send(JSON.stringify(changedPresentationObject));
 }
 
+function sendMail () {
+    window.open('mailview.html', '_blank', 'width=800px, height=600px');
+}
+
 function printAllPresentationDrafts(){                               
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     let conference_ID = conferenceObject.id;
@@ -593,4 +617,5 @@ function showPresentationDraftsByCategory(categoryDropdown){
         }
     }
     xhr.send(); 
+
 }
