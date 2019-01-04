@@ -1,4 +1,8 @@
 <html>
+<header> 
+    <script type="text/javascript" src="properties.js"></script>
+</header>
+
     <style>
       html, body {
                 width: 100%;
@@ -27,6 +31,7 @@
                 width: 700px;
                 height: 500px;
                 display: block;
+                resize: none;
             }
         button {
             border: 2px solid gray;
@@ -39,30 +44,51 @@
 
             
     </style>
+    <script>
+        
+
+        function sendSpecifiedMail () {
+            var mailTemplateObject = {};
+            mailTemplateObject.content = document.getElementById("mailtext").innerHTML;
+            mailTemplateObject.label = "ACCEPTED";
+            mailTemplateObject.subject = "test";
+            mailString = JSON.stringify(mailTemplateObject);
+            console.log(mailString);
+            let xhr = new XMLHttpRequest();  
+            xhr.open("POST", SERVER+PORT+"/api/sendmail/"+4, true);
+            xhr.onreadystatechange = function() {
+                if(this.readyState == 4 && this.status == 200){
+                    alert("Uw e-mail is verzonden naar alle applicanten.");
+                    window.close('mailview.html');
+                } else if(this.readyState == 4 && this.status == 409){
+                    let alerttext = "De volgende applicant(en) konden niet worden bereikt: ";
+                    notSendList = JSON.parse(this.responseText);
+                    for(i = 0; i < notSendList.length; i++) {
+                        alerttext += notSendList[i].name + ", " + notSendList[i].email + ". ";
+                        if (i != notSendList.length-1) {
+                            alerttext += "& "
+                        } 
+                    }
+                    alert(alerttext);  
+                }
+            }
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.send(mailString);        
+        }
+        
+    
+    </script>
 <body>
     <div class=mail>
             <span>Verstuur een anonieme mail</span>
-            <textarea>
-                Beste applicant(en),
-                
+            <textarea id="mailtext">
                 Allereerst bedankt voor het aanmelden van je presentatie.
                 
-                Er is mij nog het een en ander onduidelijk:
+                Er is mij nog het een en ander onduidelijk.
                 
-
-
-
                 Alvast bedankt voor je antwoord.
-                
-                Hartelijke groet,
-                
-                De organisatie
-
-            
-            
-            
             </textarea>
-            <button onclick=alert()>Verstuur mail</button>
+            <button onclick=sendSpecifiedMail()>Verstuur mail</button>
 
 
 
