@@ -560,7 +560,6 @@ function saveAllPresentationDrafts(){                                  // not co
 }
 
 function loadAllCategories(){
-
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     var catDropdown = document.getElementById("categoryDropdown");
 
@@ -578,7 +577,6 @@ function loadAllCategories(){
         optie.appendChild(text_optie);
 
         optie.setAttribute("onchange", "showPresentationDraftsByCategory(" + catDropdown.getAttribute("value") + ")");
-        //console.log(catDropdown.getAttribute("value") + " is gekozen");
         catDropdown.appendChild(optie); 
     }
 
@@ -596,13 +594,10 @@ function showPresentationDraftsByCategory(categoryDropdown){
            newCatValue = newCatValue.concat('%20');
         }
     }
-
-    console.log("Hier is categoryDropdown: " + categoryValue + ". CategoryNieuw: " + newCatValue);
     pageReset();
     clearSet();
 
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
-    // console.log("TEST: "+ SERVER+PORT+"/api/conference/"+conferenceObject.id+"/findpresentationdraftsbycategory/"+categoryValue);
 
     let xhr = new XMLHttpRequest();
     //xhr.open("POST",SERVER+PORT+"/api/conference/"+6+"/findpresentationdraftsbycategory/" + newCatValue,true);
