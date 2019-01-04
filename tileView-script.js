@@ -341,22 +341,28 @@ function createButtonsReviewForm(review_window, presentationID) {
 
 function savePresentation(presentationID){
     let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/pdf/"+presentationID,true);
-    //xhr.setRequestHeader("Content-Type", "application/pdf;charset=UTF-8");
+    xhr.open("GET",SERVER+PORT+"/api/download/pdf/"+presentationID,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            alert("De pdf van presentatie " + presentationID + " wordt gedownload.");
-            //new Object().setwindow.location.setAttribute(download) = SERVER+PORT+"/api/pdf/"+presentationID;
-            //currentList = JSON.parse(this.responseText);
-          }
+            console.log("Opslaan document wordt gestart.");
         }
+    }
     xhr.send();
 }
 
 function printPresentation(presentationID) {
-    let review_window =document.getElementById("review_window_div"+presentationID);
-    review_window.classList.add("div-print");
-    window.print();
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+    let conference_ID = conferenceObject.id;
+    
+    let url = SERVER+PORT+"/api/print/pdf/"+presentationID;               
+    let xhreq = new XMLHttpRequest();
+    xhreq.open("GET",url,true);
+    xhreq.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            console.log("De prompt om 1 presentatiedraft te printen is geopend.");
+        }
+    }
+    xhreq.send();
 }
 
 // Create categoriesDropdown defined in conference to the presenationReview
@@ -524,39 +530,34 @@ function postChangedReviewCategory(presentationObject) {
     xhreq.send(JSON.stringify(changedPresentationObject));
 }
 
-function printAllPresentationDrafts(){                                  // not completely implemented yet
+function printAllPresentationDrafts(){                               
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     let conference_ID = conferenceObject.id;
-
-    console.log("test: Print alle presentationdrafts!");
     
-    let url = SERVER+PORT+"/api/"+conference_ID+"/pdf/";               //change with conference_ID so drafts of that conference get printed.
+    let url = SERVER+PORT+"/api/print/pdf/";               
     let xhreq = new XMLHttpRequest();
     xhreq.open("GET",url,true);
     xhreq.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            console.log("test: Printen begint nu!");
+            console.log("De prompt om alle presentationdrafts te printen is geopend");
         }
     }
     xhreq.send();
-    console.log("test: geprint!");
 }
 
-function saveAllPresentationDrafts(){                                  // not completely implemented yet. 1. Save multiple, 2. get multiple, 3. print
+function saveAllPresentationDrafts(){                                  
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     let conference_ID = conferenceObject.id;
-    console.log("test: Sla alle presentationdrafts op!");
     
-    let url = SERVER+PORT+"/api/"+conference_ID+"/pdf/";               //change with conference_ID so drafts of that conference get saved.
+    let url = SERVER+PORT+"/api/download/pdf/";               
     let xhreq = new XMLHttpRequest();
     xhreq.open("GET",url,true);
     xhreq.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            console.log("test: Opslaan begint nu!");
+            console.log("Opslaan alle presentatiedrafts wordt gestart.");       //Alle drafts of alle van categorie?
         }
     }
     xhreq.send();
-    console.log("test: opgeslagen!");
 }
 
 function loadAllCategories(){
