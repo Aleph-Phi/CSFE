@@ -60,6 +60,7 @@ function showAllConferences() {
     xhr.open("GET",SERVER+PORT+"/api/conference",true); 
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
+            console.log(this.responseText);
             currentList = JSON.parse(this.responseText);
             pagify(showAllConferences);
             for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
@@ -113,6 +114,8 @@ function conferenceListLoop(conferenceO) {
             deleteAllButtonsNavBar(); 
             var terugknop = createButton("Terug","{deleteAllButtonsNavBar(); createHomeButton(); showAllConferences();}");
             document.getElementsByClassName("menu")[0].append(terugknop);
+            var mailsetupknop = createButton("Mail setup", "setupmail()");
+            document.getElementsByClassName("menu")[0].append(mailsetupknop);
         }
 
         document.getElementById("container").appendChild(tile);
@@ -160,6 +163,41 @@ function conferenceOptions(){
 function loadPage() {
     window.location.href = "tileView.html";  
 }
+
+function setupmail() {
+    clearSet();
+    
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET",SERVER+PORT+"/api/email/configs",true);
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 404){
+            emailconfig();
+        }
+        else if (this.readyState ==4 && this.status == 200){
+            alert("config is er");
+            haalTemplateMailsOp();
+
+            notSendList = JSON.parse(this.responseText);
+                    for(i = 0; i < notSendList.length; i++) {
+                        alerttext += notSendList[i].name + ", " + notSendList[i].email + ". ";
+                        if (i != notSendList.length-1) {
+                            alerttext += "& "
+                        } 
+                    }
+        }
+    }  
+    xhr.send(); 
+}
+
+function emailconfig() {
+    window.open('mailsetupconfig.html', '_blank', 'width=600px, height=200px');
+}
+
+function haalTemplateMailsOp(){
+    
+}
+
+
 
 
 
