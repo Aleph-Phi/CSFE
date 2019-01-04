@@ -342,11 +342,6 @@ function createButtonsReviewForm(review_window, presentationID) {
 function savePresentation(presentationID){
     let xhr = new XMLHttpRequest();
     xhr.open("GET",SERVER+PORT+"/api/download/pdf/"+presentationID,true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            console.log("Opslaan document wordt gestart.");
-        }
-    }
     xhr.send();
 }
 
@@ -357,11 +352,6 @@ function printPresentation(presentationID) {
     let url = SERVER+PORT+"/api/print/pdf/"+presentationID;               
     let xhreq = new XMLHttpRequest();
     xhreq.open("GET",url,true);
-    xhreq.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            console.log("De prompt om 1 presentatiedraft te printen is geopend.");
-        }
-    }
     xhreq.send();
 }
 
@@ -537,11 +527,6 @@ function printAllPresentationDrafts(){
     let url = SERVER+PORT+"/api/print/pdf/";               
     let xhreq = new XMLHttpRequest();
     xhreq.open("GET",url,true);
-    xhreq.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            console.log("De prompt om alle presentationdrafts te printen is geopend");
-        }
-    }
     xhreq.send();
 }
 
@@ -552,11 +537,6 @@ function saveAllPresentationDrafts(){
     let url = SERVER+PORT+"/api/download/pdf/";               
     let xhreq = new XMLHttpRequest();
     xhreq.open("GET",url,true);
-    xhreq.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            console.log("Opslaan alle presentatiedrafts wordt gestart.");       //Alle drafts of alle van categorie?
-        }
-    }
     xhreq.send();
 }
 
