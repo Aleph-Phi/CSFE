@@ -554,13 +554,21 @@ function printAllPresentationDrafts(){
     xhreq.send();
 }
 
-function saveAllPresentationDrafts(){                                  
+function saveAllPresentationDrafts(saveIndex){                                  
+    document.getElementById("saveDropdown").selectedIndex = 0;
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     let conference_ID = conferenceObject.id;
-    
-    let url = SERVER+PORT+"/api/download/pdf/";               
+    var url = SERVER+PORT+"/api/download/pdf/";                 //By default this?          
+
+    if(saveIndex == 1){
+        this.url = SERVER+PORT+"/api/download/pdf/";               
+    }else if(saveIndex == 2){
+        url = SERVER+PORT+"/api/" + conference_ID + "/excel";               
+    }
+   
     let xhreq = new XMLHttpRequest();
     xhreq.open("GET",url,true);
+    
     xhreq.send();
 }
 
@@ -617,5 +625,39 @@ function showPresentationDraftsByCategory(categoryDropdown){
         }
     }
     xhr.send(); 
+
+}
+
+function loadAllSaveOptions(){
+    var saveDropdownMenu = document.getElementById("saveDropdown");
+    
+    let disabledOption = document.createElement("option");
+    let text_disabledOption = document.createTextNode("Voorstellen exporteren als..");
+    disabledOption.setAttribute("value", 0);
+
+    disabledOption.appendChild(text_disabledOption);
+    disabledOption.disabled = true;
+    saveDropdownMenu.appendChild(disabledOption);
+
+    let optiePDF = document.createElement("option");
+    let text_optiePDF = document.createTextNode("PDF");
+    optiePDF.setAttribute("value", 1);
+    optiePDF.appendChild(text_optiePDF);
+    optiePDF.setAttribute("onchange", "saveAllPresentationDrafts(1)");
+    saveDropdownMenu.appendChild(optiePDF);
+    
+    let optieExcel = document.createElement("option");
+    let text_optieExcel = document.createTextNode("Excel");
+    optieExcel.setAttribute("value", 2);
+    optieExcel.appendChild(text_optieExcel);
+    optieExcel.setAttribute("onchange", "saveAllPresentationDrafts(2)");
+    saveDropdownMenu.appendChild(optieExcel);
+
+    saveDropdownMenu.selectedIndex = 0;
+}
+
+function selectAndSaveOption(saveDropdown){
+    var saveValue = saveDropdown.options[saveDropdown.selectedIndex].value;
+    saveAllPresentationDrafts(saveValue);
 
 }
