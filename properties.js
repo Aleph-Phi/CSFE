@@ -1,5 +1,5 @@
 //Server port
-var PORT = "8082";
+var PORT = "";
 
 var DISPLAYLIMIT=45;
 
@@ -11,4 +11,5 @@ var limitedIndex=0;
 
 var conferenceObject = {};
 
-var SERVER="http://localhost:";
+var SERVER="http://api.topiconf.carpago.nl";
+

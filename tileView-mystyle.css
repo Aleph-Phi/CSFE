@@ -67,6 +67,14 @@ html, body, .container {
     cursor: pointer;
 }
 
+.printpdfbutton, .savepdfbutton {
+    border: 2px solid gray;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .undeterminedButton, .categoryDropdown {
     border: 2px solid gray;
     margin: 15px;
@@ -86,6 +94,10 @@ html, body, .container {
     transition: 0.3s;
 }
 .deniedButton:hover {
+    background-color: rgba(255,0,0,.3);
+    transition: 0.3s;
+}
+.printpdfbutton:hover, .savepdfbutton:hover{
     background-color: rgba(255,0,0,.3);
     transition: 0.3s;
 }
@@ -254,4 +266,19 @@ html, body, .container {
   width: 260px;
   height: 55px;
   margin-top:2%;
+}
+
+
+/*Test follows https://stackoverflow.com/questions/16894683/how-to-print-html-content-on-click-of-a-button-but-not-the-page */
+
+.div-print {
+    display: none;
+}
+@media print {
+   .div-screen {
+       display: none;
+    }
+    .div-print {
+       display: block;
+    }
 }

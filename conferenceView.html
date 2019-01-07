@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="tileView-mystyle.css">
+    <link rel="stylesheet" href="conferenceView-mystyle.css">
+    <script type="text/javascript" src="properties.js"></script>
+    <script type="text/javascript" src="navigationbar.js"></script>
+    <script type="text/javascript" src="conferenceView-script.js"></script>
+    <script type="text/javascript" src="addConferenceForm-script.js"></script>
+    <script type="text/javascript" src="tileView-script.js"></script>
+   
+    <title>PresentatieApp</title>
+</head>
+
+<body onload=showAllConferences()>
+    <div class="menu">
+        <button id= createConferenceButton onclick=showCreateConferenceForm()>Creëer conferentie</button>
+    </div>
+
+    <div class="container" id="container">                       </div>
+    <div class="containerNav" id="pncc">
+        <div class="page_nav_container" id="page_nav_container">     </div>
+    </div>
+    <div class="conference_view" id="conference_view"></div>
+    <div class="form_review" id="form_review"></div>
+
+</body>
+
+</html>

@@ -1,3 +1,4 @@
+
 function clearSet() {
     var myNode = document.getElementById("container");
     myNode.innerHTML = '';
@@ -52,53 +53,24 @@ if (currentPage>0){
 
   document.getElementById("page_nav_container").appendChild(page_button_panel);
 
-
 }
 
-function showAll() {
-    clearSet()
+function showPresentationDrafts(labelwaarde) {
+    pageReset();
+    clearSet();
+    let label = labelwaarde;
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+'/api/presentationdraft',true); //niet dry - meer flexibiliteit - bijv. vd poort
+    xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceObject.id+"/findpresentationdraft/"+label,true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             currentList = JSON.parse(this.responseText);
-            pagify(showAll);
+            pagify(showPresentationDrafts);
             for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                    presentationListLoop(currentList[limitedIndex]);
+                presentationListLoop(currentList[limitedIndex]);
             }
         }
     }
-    xhr.send();
-}
-
-function showUndetermined(otherPresentationList) { //called by showUnlabeled
-    let presentationList2=otherPresentationList;
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/4",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            let presentationList = JSON.parse(this.responseText);
-            currentList = presentationList2.concat(presentationList);
-            pagify(showUnlabeled);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-            presentationListLoop(currentList[limitedIndex]);
-            }
-
-      }
-   }
-    xhr.send();
-}
-
-function showUnlabeled() {
-    clearSet();
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/0",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            let presentationList = JSON.parse(this.responseText);
-            showUndetermined(presentationList);
-      }
-   }
     xhr.send();
 }
 
@@ -120,16 +92,17 @@ function responseHandler(xhr){
                 break;
               } else {
                 alert("There are unlabeled presentation drafts remaining");
-                showUnlabeled(pageReset());
+                showPresentationDrafts(0);
                 break;
               }
            }
 }
 
 function finalizeSelection(){
-  clearSet()
+  clearSet();
+  conferenceObject = JSON.parse(sessionStorage.conferenceObject);
   let xhr = new XMLHttpRequest();
-  xhr.open("GET",SERVER+PORT+"/api/presentationdraft/finalize",true);
+  xhr.open("GET",SERVER+PORT+"/api/" + conferenceObject.id + "/presentationdraft/finalize",true);
   xhr.onreadystatechange = function() {
       if(this.readyState == 4){
       responseHandler(xhr);
@@ -138,53 +111,18 @@ function finalizeSelection(){
   xhr.send();
 }
 
-function showDenied() {
-    clearSet();
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/1",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            currentList = JSON.parse(this.responseText);
-            pagify(showDenied);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                presentationListLoop(currentList[limitedIndex]);
-           }
-        }
-    }
-    xhr.send();
-}
 
-function showAccepted() {
-    clearSet();
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/2",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            currentList = JSON.parse(this.responseText);
-            pagify(showAccepted);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                presentationListLoop(currentList[limitedIndex]);
-          }
-        }
-    }
-    xhr.send();
-}
-
-function showReserved() {
-    clearSet();
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft/findbylabel/3",true);
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-            currentList = JSON.parse(this.responseText);
-            pagify(showReserved);
-            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
-                presentationListLoop(currentList[limitedIndex]);
-          }
-        }
-    }
-    xhr.send();
-}
+// function finalizeSelection(){
+//     clearSet()
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceObject.id+"/finalize",true);
+//     xhr.onreadystatechange = function() {
+//         if(this.readyState == 4){
+//         responseHandler(xhr);
+//         }
+//     }
+//     xhr.send();
+//   }
 
 //Loopt over de objecten om de tegels aan te maken met de betreffende info
 function presentationListLoop(presentationObject) {
@@ -246,6 +184,8 @@ function presentationListLoop(presentationObject) {
 
 //Creert en toont het overzichtscherm van de inhoud van een presentatie (na klik op tegel)
 function showFormReview(presentationID) {
+    document.getElementById("categoryDropdown").selectedIndex = 0;
+
     let review_window = document.createElement("div");
     review_window.classList.add("form_review");
     createButtonsReviewForm(review_window, presentationID);
@@ -395,6 +335,43 @@ function createButtonsReviewForm(review_window, presentationID) {
     changeButton.appendChild(text_changeButton);
     review_window.appendChild(changeButton);
     changeButton.onclick = function() { changeReview(presentationID, "changeReview") };
+
+    let printButton = document.createElement("button");
+    let text_printButton = document.createTextNode("Voorstel printen");
+    printButton.classList.add("generalButton");
+    printButton.appendChild(text_printButton);
+    review_window.appendChild(printButton);
+    printButton.onclick = function() { printPresentation(presentationID) };
+
+    let mailButton = document.createElement("button");
+    let text_mailButton = document.createTextNode("Applicanten mailen");
+    mailButton.classList.add("generalButton");
+    mailButton.appendChild(text_mailButton);
+    review_window.appendChild(mailButton);
+    mailButton.onclick = function() { sendMail() };
+
+    let saveButton = document.createElement("button");
+    let text_saveButton = document.createTextNode("Voorstel opslaan");
+    saveButton.classList.add("generalButton");
+    saveButton.appendChild(text_saveButton);
+    review_window.appendChild(saveButton);
+    saveButton.onclick = function() { savePresentation(presentationID) };
+}
+
+function savePresentation(presentationID){
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET",SERVER+PORT+"/api/download/pdf/"+presentationID,true);
+    xhr.send();
+}
+
+function printPresentation(presentationID) {
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+    let conference_ID = conferenceObject.id;
+    
+    let url = SERVER+PORT+"/api/print/pdf/"+presentationID;               
+    let xhreq = new XMLHttpRequest();
+    xhreq.open("GET",url,true);
+    xhreq.send();
 }
 
 // Create categoriesDropdown defined in conference to the presenationReview
@@ -409,19 +386,23 @@ function createDropdownCategories(presentationID) {
     disabledOption.appendChild(text_disabledOption);
     categoryDropdown.appendChild(disabledOption);
 
-    let categoriesList = conferenceObject.categories;
-    for(let i = 0; i < categoriesList.length; i++) {
-        let category = document.createElement("option");
-        if(document.getElementById("category"+presentationID).textContent === categoriesList[i]){
-            category.setAttribute("selected", "selected");
+
+    if (conferenceObject.categories != null){
+        let categoriesList = conferenceObject.categories;
+        for(let i = 0; i < categoriesList.length; i++) {
+            let category = document.createElement("option");
+            if(document.getElementById("category"+presentationID).textContent === categoriesList[i]){
+                category.setAttribute("selected", "selected");
+            }
+            category.setAttribute("value",categoriesList[i]);
+            let text_category = document.createTextNode(categoriesList[i]);
+            category.appendChild(text_category);
+            categoryDropdown.appendChild(category);
         }
-        category.setAttribute("value",categoriesList[i]);
-        let text_category = document.createTextNode(categoriesList[i]);
-        category.appendChild(text_category);
-        categoryDropdown.appendChild(category);
     }
     return categoryDropdown;
 }
+
 
 //Get conferenceObject by id number, variable is saved in properties.js
 function getConferenceById(conferenceID) {
@@ -487,29 +468,29 @@ function borderColor(presentationID) {
 //Functie voor het refreshen van de fields nadat een label gewijzigd is
 function refreshFields(presentationID) {
     if(document.getElementById("label"+presentationID).textContent === "ACCEPTED"){
-        showAccepted();
+        showPresentationDrafts(2);
     } else if (document.getElementById("label"+presentationID).textContent === "DENIED"){
-        showDenied();
+        showPresentationDrafts(1);
     } else if (document.getElementById("label"+presentationID).textContent === "RESERVED"){
-        showReserved();
+        showPresentationDrafts(3);
     } else if (document.getElementById("label"+presentationID).textContent === "UNDETERMINED"){
-        showUnlabeled();
+        showPresentationDrafts(4);
     } else if (document.getElementById("label"+presentationID).textContent === "UNLABELED"){
-        showUnlabeled();
+        showPresentationDrafts(0);
     }
 }
 
 function refreshFieldsDeletion(presentationLabel) {
     if(presentationLabel === "ACCEPTED"){
-        showAccepted();
+        showPresentationDrafts(2);
     } else if (presentationLabel === "DENIED"){
-        showDenied();
+        showPresentationDrafts(1);
     } else if (presentationLabel === "RESERVED"){
-        showReserved();
+        showPresentationDrafts(3);
     } else if (presentationLabel === "UNDETERMINED"){
-        showUnlabeled();
+        showPresentationDrafts(4);
     } else if (presentationLabel === "UNLABELED"){
-        showUnlabeled();
+        showPresentationDrafts(0);
     }
 }
 
@@ -556,4 +537,126 @@ function postChangedReviewCategory(presentationObject) {
     presentationObject.category = document.getElementById("categoryDropdown"+presentationObject.id).value;
     let changedPresentationObject = { "presentationDraft": presentationObject };
     xhreq.send(JSON.stringify(changedPresentationObject));
+}
+
+function sendMail () {
+    window.open('mailview.html', '_blank', 'width=800px, height=600px');
+}
+
+function printAllPresentationDrafts(){                               
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+    let conference_ID = conferenceObject.id;
+    
+    let url = SERVER+PORT+"/api/print/pdf/";               
+    let xhreq = new XMLHttpRequest();
+    xhreq.open("GET",url,true);
+    xhreq.send();
+}
+
+function saveAllPresentationDrafts(saveIndex){                                  
+    document.getElementById("saveDropdown").selectedIndex = 0;
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+    let conference_ID = conferenceObject.id;
+    var url = SERVER+PORT+"/api/download/pdf/";                 //By default this?          
+
+    if(saveIndex == 1){
+        this.url = SERVER+PORT+"/api/download/pdf/";               
+    }else if(saveIndex == 2){
+        url = SERVER+PORT+"/api/" + conference_ID + "/excel";               
+    }
+   
+    let xhreq = new XMLHttpRequest();
+    xhreq.open("GET",url,true);
+    
+    xhreq.send();
+}
+
+function loadAllCategories(){
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+    var catDropdown = document.getElementById("categoryDropdown");
+
+    let disabledOption = document.createElement("option");
+    let text_disabledOption = document.createTextNode("Toon alle");
+    disabledOption.setAttribute("value", "optie"+0);
+
+    disabledOption.appendChild(text_disabledOption);
+    catDropdown.appendChild(disabledOption);
+
+    for(i=0;i<conferenceObject.categories.length; i++){
+        let optie = document.createElement("option");
+        let text_optie = document.createTextNode(conferenceObject.categories[i]);
+        optie.setAttribute("value", text_optie+ "_" +(i+1));
+        optie.appendChild(text_optie);
+
+        optie.setAttribute("onchange", "showPresentationDraftsByCategory(" + catDropdown.getAttribute("value") + ")");
+        catDropdown.appendChild(optie); 
+    }
+
+    catDropdown.selectedIndex = 0;
+}
+
+
+function showPresentationDraftsByCategory(categoryDropdown){
+    var categoryValue = categoryDropdown.options[categoryDropdown.selectedIndex].innerText;
+    var newCatValue = "";
+    for(j=0; j<categoryValue.length;j++){
+        if(categoryValue.charAt(j) != " "){
+            newCatValue = newCatValue.concat(categoryValue.charAt(j));
+        }else{
+           newCatValue = newCatValue.concat('%20');
+        }
+    }
+    pageReset();
+    clearSet();
+
+    conferenceObject = JSON.parse(sessionStorage.conferenceObject);
+
+    let xhr = new XMLHttpRequest();
+    //xhr.open("POST",SERVER+PORT+"/api/conference/"+6+"/findpresentationdraftsbycategory/" + newCatValue,true);
+    xhr.open("GET",SERVER+PORT+"/api/findpresentationdraftsbycategory?id="+conferenceObject.id+"&category=\"" + newCatValue + "\"",true);
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            currentList = JSON.parse(this.responseText);
+            pagify(showPresentationDraftsByCategory);
+            for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
+                presentationListLoop(currentList[limitedIndex]);
+            }
+        }
+    }
+    xhr.send(); 
+
+}
+
+function loadAllSaveOptions(){
+    var saveDropdownMenu = document.getElementById("saveDropdown");
+    
+    let disabledOption = document.createElement("option");
+    let text_disabledOption = document.createTextNode("Voorstellen exporteren als..");
+    disabledOption.setAttribute("value", 0);
+
+    disabledOption.appendChild(text_disabledOption);
+    disabledOption.disabled = true;
+    saveDropdownMenu.appendChild(disabledOption);
+
+    let optiePDF = document.createElement("option");
+    let text_optiePDF = document.createTextNode("PDF");
+    optiePDF.setAttribute("value", 1);
+    optiePDF.appendChild(text_optiePDF);
+    optiePDF.setAttribute("onchange", "saveAllPresentationDrafts(1)");
+    saveDropdownMenu.appendChild(optiePDF);
+    
+    let optieExcel = document.createElement("option");
+    let text_optieExcel = document.createTextNode("Excel");
+    optieExcel.setAttribute("value", 2);
+    optieExcel.appendChild(text_optieExcel);
+    optieExcel.setAttribute("onchange", "saveAllPresentationDrafts(2)");
+    saveDropdownMenu.appendChild(optieExcel);
+
+    saveDropdownMenu.selectedIndex = 0;
+}
+
+function selectAndSaveOption(saveDropdown){
+    var saveValue = saveDropdown.options[saveDropdown.selectedIndex].value;
+    saveAllPresentationDrafts(saveValue);
+
 }
