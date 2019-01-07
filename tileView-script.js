@@ -58,7 +58,7 @@ if (currentPage>0){
 function showAll() {
     clearSet()
     let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/presentationdraft",true); //niet dry - meer flexibiliteit - bijv. vd poort
+    xhr.open("GET",SERVER+PORT+'/api/presentationdraft',true); //niet dry - meer flexibiliteit - bijv. vd poort
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             currentList = JSON.parse(this.responseText);
@@ -105,7 +105,6 @@ function showUnlabeled() {
 function responseHandler(xhr){
   let status=xhr.status;
   let statusText=(xhr.responseText);
-  console.log(xhr);
   switch(status){
       case 200:
               // show new app phase
