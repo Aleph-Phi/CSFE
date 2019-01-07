@@ -349,7 +349,7 @@ function createButtonsReviewForm(review_window, presentationID) {
     mailButton.classList.add("generalButton");
     mailButton.appendChild(text_mailButton);
     review_window.appendChild(mailButton);
-    mailButton.onclick = function() { sendMail() };
+    mailButton.onclick = function() { sessionStorage.presentationID = JSON.stringify(presentationID); sendMail() };
 
     let saveButton = document.createElement("button");
     let text_saveButton = document.createTextNode("Voorstel opslaan");
