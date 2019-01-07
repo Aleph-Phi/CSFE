@@ -73,7 +73,7 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
 
 
 function fillCategoriesInForm(){
-    let conf_id = 97;
+    let conf_id = 8;
     console.log("test: Conference id = "+ conf_id);
     var dropdown = document.getElementById("form_category");
     dropdown
@@ -89,7 +89,7 @@ function fillCategoriesInForm(){
                 optie.setAttribute("value", "categorie"+i);
                 optie.innerText = categories[i];
                 dropdown.appendChild(optie);
-                console.log("test: " + optie.innerText + " is toegevoegd aan dropdown.");
+                //console.log("test: " + optie.innerText + " is toegevoegd aan dropdown.");
             }
         }
     }
