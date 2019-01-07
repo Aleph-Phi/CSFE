@@ -69,3 +69,40 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
         document.getElementById("extra").appendChild(field2);
     }
 }
+
+
+
+function fillCategoriesInForm(){
+    let conf_id = 97;
+    console.log("test: Conference id = "+ conf_id);
+    var dropdown = document.getElementById("form_category");
+    dropdown
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET",SERVER+PORT+"/api/conference/"+conf_id,true);
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            currentList = JSON.parse(this.responseText);
+            var categories = currentList.categories;
+            for(i=0; i<categories.length; i++){
+                var optie = document.createElement("option");
+                optie.setAttribute("value", "categorie"+i);
+                optie.innerText = categories[i];
+                dropdown.appendChild(optie);
+                console.log("test: " + optie.innerText + " is toegevoegd aan dropdown.");
+            }
+        }
+    }
+    xhr.send();
+
+
+/*
+    1. Vang conference_id op.
+    2. Vang alle categorieen op die horen bij conference_id.
+    3. Leeg opties in categorie-dropdown.
+    4. Voor elke categorie voeg je een optie toe aan dropdown.
+    5. 
+*/
+
+}
+
