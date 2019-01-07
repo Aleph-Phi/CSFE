@@ -55,10 +55,10 @@
       <script>
           function sendemailconfig() {
             let xhr = new XMLHttpRequest();
-            var host = document.getElementById("host").value;
-            var port = document.getElementById("port").value;
-            var username = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
+            var host = document.getElementById("host").value.trim();
+            var port = document.getElementById("port").value.trim();
+            var username = document.getElementById("username").value.trim();
+            var password = document.getElementById("password").value.trim();
     
             xhr.open("POST",SERVER+PORT+"/api/email/setupconfig/"+host+"/"+port+"/"+username+"/"+password,true);
             xhr.onreadystatechange = function() {

@@ -53,9 +53,11 @@
             mailTemplateObject.label = "ACCEPTED";
             mailTemplateObject.subject = "test";
             mailString = JSON.stringify(mailTemplateObject);
-            console.log(mailString);
+            presentationID = JSON.parse(sessionStorage.presentationID);
+
+           
             let xhr = new XMLHttpRequest();  
-            xhr.open("POST", SERVER+PORT+"/api/sendmail/"+4, true);
+            xhr.open("POST", SERVER+PORT+"/api/sendmail/"+presentationID, true);
             xhr.onreadystatechange = function() {
                 if(this.readyState == 4 && this.status == 200){
                     alert("Uw e-mail is verzonden naar alle applicanten.");
