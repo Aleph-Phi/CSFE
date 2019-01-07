@@ -60,7 +60,6 @@ function showAllConferences() {
     xhr.open("GET",SERVER+PORT+"/api/conference",true); 
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            console.log(this.responseText);
             currentList = JSON.parse(this.responseText);
             pagify(showAllConferences);
             for(limitedIndex; limitedIndex < loopLimit; limitedIndex++) {
@@ -166,12 +165,12 @@ function loadPage() {
 
 function setupmail() {
     clearSet();
-    
+  
     let xhr = new XMLHttpRequest();
     xhr.open("GET",SERVER+PORT+"/api/email/configs",true);
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 404){
-            emailconfig();
+            window.open('mailsetupconfig.html', '_blank', 'width=600px, height=200px');
         }
         else if (this.readyState ==4 && this.status == 200){
             alert("config is er");
@@ -187,10 +186,6 @@ function setupmail() {
         }
     }  
     xhr.send(); 
-}
-
-function emailconfig() {
-    window.open('mailsetupconfig.html', '_blank', 'width=600px, height=200px');
 }
 
 function haalTemplateMailsOp(){
