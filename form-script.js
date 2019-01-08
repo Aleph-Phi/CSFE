@@ -73,10 +73,9 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
 
 
 function fillCategoriesInForm(){
-    let conf_id = 8;
-    console.log("test: Conference id = "+ conf_id);
+    
+    let conf_id = localStorage.conferenceID;                                                                                // onload body
     var dropdown = document.getElementById("form_category");
-    dropdown
 
     let xhr = new XMLHttpRequest();
     xhr.open("GET",SERVER+PORT+"/api/conference/"+conf_id,true);

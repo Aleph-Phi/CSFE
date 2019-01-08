@@ -109,12 +109,23 @@ function conferenceListLoop(conferenceO) {
         tile.onclick = function() {
             conferenceObject = conferenceO; 
             sessionStorage.conferenceObject = JSON.stringify(conferenceObject);
-            conferenceOptions(); 
+            var conferenceCategories = conferenceObject.categories;
+            
+            console.log(conferenceCategories);               //categorieen te pakken per conference - maar kan niet doorgeven aan nieuw window
+           
+            clearSet();
             deleteAllButtonsNavBar(); 
+            
             var terugknop = createButton("Terug","{deleteAllButtonsNavBar(); createHomeButton(); showAllConferences();}");
-            document.getElementsByClassName("menu")[0].append(terugknop);
             var mailsetupknop = createButton("Mail setup", "setupmail()");
-            document.getElementsByClassName("menu")[0].append(mailsetupknop);
+            var presentatievoorstellen = createButton("Presentatievoorstellen", "loadPage()");
+            var planning = createButton("Planning", "alert(\"Deze functionaliteit ontbreekt op dit moment.\")");
+            var voorbeeldaanmelding = createButton("Voorbeeld aanmeldformulier", "showApplicantForm(" + conferenceO.id + ")");
+
+            var conferenceknoppen = [terugknop, mailsetupknop, presentatievoorstellen, planning, voorbeeldaanmelding];
+            for(i=0 ; i < conferenceknoppen.length; i++){
+                document.getElementsByClassName("menu")[0].append(conferenceknoppen[i]);
+            }
         }
 
         document.getElementById("container").appendChild(tile);
@@ -136,28 +147,28 @@ function borderColorConference(conferenceO) {
     }
 }
 
-//Creeert navigatietiles binnen de conferentie, zoals 'Presentatievoorstellen' en 'Planning'.
-function conferenceOptions(){
-    clearSet();
-    var tegels = ["Presentatievoorstellen","Planning"];
-    var locatie = ["loadPage()","planning"];
+//Creeert navigatietiles binnen de conferentie, zoals 'Presentatievoorstellen' en 'Planning'. ---UPDATE: Komt te vervallen, test nodig of functionaliteit nog intact is.
+// function conferenceOptions(){
+//     clearSet();
+//     var tegels = ["Presentatievoorstellen","Planning"];
+//     var locatie = ["loadPage()","planning"];
     
-    for(i=0;i<tegels.length;i++){
-        var tile = document.createElement("div");
-        tile.classList.add("tileNew");
-        tile.setAttribute("id", conferenceObject.id);
-        tile.setAttribute("draggable","true");
+//     for(i=0;i<tegels.length;i++){
+//         var tile = document.createElement("div");
+//         tile.classList.add("tileNew");
+//         tile.setAttribute("id", conferenceObject.id);
+//         tile.setAttribute("draggable","true");
 
-        var variable = document.createElement("p");
-        variable.innerHTML = tegels[i];
-        variable.setAttribute(tegels[i], tegels[i]+conferenceObject.id);
+//         var variable = document.createElement("p");
+//         variable.innerHTML = tegels[i];
+//         variable.setAttribute(tegels[i], tegels[i]+conferenceObject.id);
         
-        tile.appendChild(variable);
+//         tile.appendChild(variable);
 
-        tile.setAttribute("onclick", locatie[i]);
-        document.getElementById("container").appendChild(tile);
-    }
-}
+//         tile.setAttribute("onclick", locatie[i]);
+//         document.getElementById("container").appendChild(tile);
+//     }
+// }
 
 function loadPage() {
     window.location.href = "tileView.html";  
@@ -192,8 +203,60 @@ function haalTemplateMailsOp(){
     
 }
 
+function showApplicantForm(conferenceID){
+
+    console.log(">>>" + conferenceID);
+    localStorage.setItem('conferenceID', conferenceID);
+    var applicantwindow = window.open('form.html', '_blank');
+    
 
 
+
+    // let conferenceobject = conferenceO;
+    // console.log(conferenceobject);
+    
+    
+    // applicantwindow.sessionStorage.conferenceObject = JSON.stringify(conferenceobject);                // conf id komt goed mee
+    // applicantwindow.alert(applicantwindow.sessionStorage.conferenceO);
+    //loadAllCategories(conferenceID);
+
+    //laad categorieen op basis van conf id
+}
+
+
+
+//dubbeling met loadAllCategories in tileView.html, maar ook hier nodig.
+function loadAllCategories(conferenceID){
+    var catDropdown = document.getElementById("categoryDropdown");
+
+    let disabledOption = document.createElement("option");
+    let text_disabledOption = document.createTextNode("Toon alle");
+    disabledOption.setAttribute("value", "optie"+0);
+
+    disabledOption.appendChild(text_disabledOption);
+    catDropdown.appendChild(disabledOption);
+
+
+    // vul array met categorieen op basis van XHR.
+
+    for(i=0;i<conferenceObject.categories.length; i++){
+        let optie = document.createElement("option");
+        let text_optie = document.createTextNode(conferenceObject.categories[i]);
+        optie.setAttribute("value", text_optie+ "_" +(i+1));
+        optie.appendChild(text_optie);
+
+        optie.setAttribute("onchange", "showPresentationDraftsByCategory(" + catDropdown.getAttribute("value") + ")");
+        catDropdown.appendChild(optie); 
+    }
+
+    catDropdown.selectedIndex = 0;
+}
+
+function loadConference(conferenceID){
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET",SERVER+PORT+"/api/conference/"+conferenceID,true);
+    xhr.send(); 
+}
 
 
 //VOOR DE TEST, MOET GEINTEGREERD WORDEN MET TILEVIEW-SCRIPT
