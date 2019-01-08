@@ -64,7 +64,7 @@ function showCreateConferenceForm() {
        
         var dropdownPodia = document.createElement("select");
         var optiePodia = document.createElement("option");
-        var optiePodia_text = document.createTextNode("Selecteer aantal podia");
+        var optiePodia_text = document.createTextNode("Selecteer uw aantal");
         optiePodia.appendChild(optiePodia_text);
         dropdownPodia.appendChild(optiePodia);
         conferentiedetails.appendChild(document.createElement("br"));
@@ -76,13 +76,13 @@ function showCreateConferenceForm() {
         conferentiedetails.appendChild(document.createElement("br"));
 
         let categories = document.createElement("span");
-        categories.innerHTML = "Categorieën: ";
+        categories.innerHTML = "Categorie&#235;n: ";
         conferentiedetails.appendChild(categories);
         conferentiedetails.appendChild(document.createElement("br"));
 
         var dropdownCategories = document.createElement("select");
         var optieCat = document.createElement("option");
-        var optieCat_text = document.createTextNode("Selecteer aantal categorieën");
+        var optieCat_text = document.createTextNode("Selecteer uw aantal");
         optieCat.appendChild(optieCat_text);
         dropdownCategories.appendChild(optieCat);
         conferentiedetails.appendChild(document.createElement("br"));

@@ -109,10 +109,6 @@ function conferenceListLoop(conferenceO) {
         tile.onclick = function() {
             conferenceObject = conferenceO; 
             sessionStorage.conferenceObject = JSON.stringify(conferenceObject);
-            var conferenceCategories = conferenceObject.categories;
-            
-            console.log(conferenceCategories);               //categorieen te pakken per conference - maar kan niet doorgeven aan nieuw window
-           
             clearSet();
             deleteAllButtonsNavBar(); 
             
@@ -204,23 +200,8 @@ function haalTemplateMailsOp(){
 }
 
 function showApplicantForm(conferenceID){
-
-    console.log(">>>" + conferenceID);
     localStorage.setItem('conferenceID', conferenceID);
-    var applicantwindow = window.open('form.html', '_blank');
-    
-
-
-
-    // let conferenceobject = conferenceO;
-    // console.log(conferenceobject);
-    
-    
-    // applicantwindow.sessionStorage.conferenceObject = JSON.stringify(conferenceobject);                // conf id komt goed mee
-    // applicantwindow.alert(applicantwindow.sessionStorage.conferenceO);
-    //loadAllCategories(conferenceID);
-
-    //laad categorieen op basis van conf id
+    window.open('form.html', '_blank');    
 }
 
 

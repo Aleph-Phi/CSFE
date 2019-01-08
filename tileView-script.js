@@ -352,7 +352,7 @@ function createButtonsReviewForm(review_window, presentationID) {
     mailButton.onclick = function() { sessionStorage.presentationID = JSON.stringify(presentationID); sendMail() };
 
     let saveButton = document.createElement("button");
-    let text_saveButton = document.createTextNode("Voorstel opslaan");
+    let text_saveButton = document.createTextNode("Voorstel downloaden");
     saveButton.classList.add("generalButton");
     saveButton.appendChild(text_saveButton);
     review_window.appendChild(saveButton);
