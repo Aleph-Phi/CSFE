@@ -22,15 +22,32 @@ function postForm() {
     var applicant = { "name":name, "email":email, "occupation":occupation, "gender":gender, "dateOfBirth":date_of_birth, "requests":requests };
     applicants.push(applicant);
 
+    var conference = localStorage.conferenceID;
+
     let y = document.getElementById("form_cohost").value;
     for(let i = 1; i<=y; i++) {                                  // Checkt of er co-hosts zijn aangemeld en maakt deze aan.
         applicant = postCoHost(i);
         applicants.push(applicant);
     }
 
-    var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "category":category, "duration":duration },
-                                      "applicants": applicants };
+//    var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "category":category, "duration":duration },
+  //                                    "applicants": applicants, "conference": { "id":conference} };
+                                      
+    var presentationDraftApplicant = { 
+                        "presentationDraft": { 
+                                "subject":subject, 
+                                "summary":summary, 
+                                "type":type, 
+                                "category":category, 
+                                "duration":duration 
+                            },
+                        "applicants": applicants, 
+                        "conference": { 
+                                "id":conference
+                        }
+                    };
 
+    console.log(presentationDraftApplicant);
     xhreq.send(JSON.stringify(presentationDraftApplicant));
     alert("Bedankt voor je aanmelding!");
 }
@@ -85,7 +102,7 @@ function fillCategoriesInForm(){
             var categories = currentList.categories;
             for(i=0; i<categories.length; i++){
                 var optie = document.createElement("option");
-                optie.setAttribute("value", "categorie"+i);
+                optie.setAttribute("value", categories[i]);
                 optie.innerText = categories[i];
                 dropdown.appendChild(optie);
                 //console.log("test: " + optie.innerText + " is toegevoegd aan dropdown.");
