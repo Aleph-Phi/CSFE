@@ -1,9 +1,14 @@
+<<<<<<< HEAD
+=======
+window.onload = function() { getConferenceById(1) };
+>>>>>>> 25ad12e05aa7ddc6e7b1e18b72d58df83957155a
 
 function clearSet() {
     var myNode = document.getElementById("container");
     myNode.innerHTML = '';
 }
 
+<<<<<<< HEAD
 function pageReset(){
   currentPage=0;
 }
@@ -53,6 +58,23 @@ if (currentPage>0){
 
   document.getElementById("page_nav_container").appendChild(page_button_panel);
 
+=======
+function showUndetermined(otherPresentationList) { //called by showUnlabeled
+    let presentationList2=otherPresentationList;
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET","http://localhost:"+PORT+"/api/presentationdraft/findbylabel/4",true);
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            let presentationList = JSON.parse(this.responseText);
+            let presentationListCombined=presentationList2.concat(presentationList);
+            console.log(presentationListCombined);
+            for(let j = 0; j < presentationListCombined.length; j++) {
+                    presentationListLoop(presentationListCombined[j]);
+            }
+      }
+   }
+    xhr.send();
+>>>>>>> 25ad12e05aa7ddc6e7b1e18b72d58df83957155a
 }
 
 function showPresentationDrafts(labelwaarde) {
@@ -384,6 +406,7 @@ function createDropdownCategories(presentationID) {
 
     let disabledOption = document.createElement("option");
     let text_disabledOption = document.createTextNode("Kies een categorie");
+    disabledOption.setAttribute("value", null);
     disabledOption.appendChild(text_disabledOption);
     categoryDropdown.appendChild(disabledOption);
 
