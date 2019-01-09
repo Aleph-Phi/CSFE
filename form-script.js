@@ -1,6 +1,7 @@
 function postForm() {
+    var conference = localStorage.conferenceID;
     let xhreq = new XMLHttpRequest();
-    xhreq.open("POST",SERVER+PORT+"/api/presentationdraft",true);
+    xhreq.open("POST",SERVER+PORT+"/api/conference/"+conference+"/savepresentationdraft",true);
     xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
     var subject = document.getElementById("form_subject").value;
@@ -22,32 +23,15 @@ function postForm() {
     var applicant = { "name":name, "email":email, "occupation":occupation, "gender":gender, "dateOfBirth":date_of_birth, "requests":requests };
     applicants.push(applicant);
 
-    var conference = localStorage.conferenceID;
-
     let y = document.getElementById("form_cohost").value;
     for(let i = 1; i<=y; i++) {                                  // Checkt of er co-hosts zijn aangemeld en maakt deze aan.
         applicant = postCoHost(i);
         applicants.push(applicant);
     }
 
-//    var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "category":category, "duration":duration },
-  //                                    "applicants": applicants, "conference": { "id":conference} };
+    var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "category":category, "duration":duration },
+                                      "applicants": applicants };
                                       
-    var presentationDraftApplicant = { 
-                        "presentationDraft": { 
-                                "subject":subject, 
-                                "summary":summary, 
-                                "type":type, 
-                                "category":category, 
-                                "duration":duration 
-                            },
-                        "applicants": applicants, 
-                        "conference": { 
-                                "id":conference
-                        }
-                    };
-
-    console.log(presentationDraftApplicant);
     xhreq.send(JSON.stringify(presentationDraftApplicant));
     alert("Bedankt voor je aanmelding!");
 }
@@ -87,8 +71,6 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
     }
 }
 
-
-
 function fillCategoriesInForm(){
     
     let conf_id = localStorage.conferenceID;                                                                                // onload body
@@ -110,15 +92,6 @@ function fillCategoriesInForm(){
         }
     }
     xhr.send();
-
-
-/*
-    1. Vang conference_id op.
-    2. Vang alle categorieen op die horen bij conference_id.
-    3. Leeg opties in categorie-dropdown.
-    4. Voor elke categorie voeg je een optie toe aan dropdown.
-    5. 
-*/
 
 }
 
