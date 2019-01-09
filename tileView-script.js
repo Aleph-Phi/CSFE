@@ -374,18 +374,18 @@ function createButtonsReviewForm(review_window, presentationID) {
     mailButton.onclick = function() { sessionStorage.presentationID = JSON.stringify(presentationID); sendMail() };
 
     let saveButton = document.createElement("button");
-    let text_saveButton = document.createTextNode("Voorstel opslaan");
+    let text_saveButton = document.createTextNode("Voorstel downloaden");
     saveButton.classList.add("generalButton");
     saveButton.appendChild(text_saveButton);
     review_window.appendChild(saveButton);
-    saveButton.onclick = function() { savePresentation(presentationID) };
+    saveButton.onclick = function() { downloadSinglePdf(conferenceObject.id, presentationID) };
 }
 
-function savePresentation(presentationID){
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET",SERVER+PORT+"/api/download/pdf/"+presentationID,true);
-    xhr.send();
-}
+// function savePresentation(presentationID){
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("GET",SERVER+PORT+"/api/download/pdf/"+presentationID,true);
+//     xhr.send();
+// }
 
 function printPresentation(presentationID) {
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
@@ -581,18 +581,71 @@ function saveAllPresentationDrafts(saveIndex){
     document.getElementById("saveDropdown").selectedIndex = 0;
     conferenceObject = JSON.parse(sessionStorage.conferenceObject);
     let conference_ID = conferenceObject.id;
-    var url = SERVER+PORT+"/api/download/pdf/";                 //By default this?          
-
+              
     if(saveIndex == 1){
-        this.url = SERVER+PORT+"/api/download/pdf/";               
+        downloadPdf(conference_ID);
     }else if(saveIndex == 2){
-        url = SERVER+PORT+"/api/" + conference_ID + "/excel";               
+        downloadExcel(conference_ID);
     }
-   
-    let xhreq = new XMLHttpRequest();
-    xhreq.open("GET",url,true);
-    
-    xhreq.send();
+}
+
+function downloadExcel(conferenceId){
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = 'arraybuffer';
+    xhr.open("GET",SERVER + PORT + "/api/" + conferenceId + "/download/excel",true);
+    xhr.onload = function() {
+        console.log(xhr.response);
+        var res = xhr.response;
+        let blob = new Blob([new Uint8Array(res)]);
+            
+        console.log(blob);
+        var a = window.document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = 'PresentationDrafts.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    xhr.send();
+}
+
+function downloadPdf(conferenceId){
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = 'arraybuffer';
+    xhr.open("GET",SERVER + PORT + "/api/" + conferenceId + "/download/pdf",true);
+    xhr.onload = function() {
+        console.log(xhr.response);
+        var res = xhr.response;
+        let blob = new Blob([new Uint8Array(res)]);
+            
+        console.log(blob);
+        var a = window.document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = 'PresentationDrafts.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    xhr.send();
+}
+function downloadSinglePdf(conferenceId, presentationDraftId){
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = 'arraybuffer';
+    xhr.open("GET",SERVER + PORT + "/api/" + conferenceId + "/download/pdf/" + presentationDraftId,true);
+    xhr.onload = function() {
+        console.log(xhr.response);
+        var res = xhr.response;
+        let blob = new Blob([new Uint8Array(res)]);
+            
+        console.log(blob);
+        var a = window.document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = 'PresentationDraft' + presentationDraftId + '.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    xhr.send();
 }
 
 function loadAllCategories(){

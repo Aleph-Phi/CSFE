@@ -77,7 +77,7 @@ html, body, .container {
 
 .undeterminedButton, .categoryDropdown {
     border: 2px solid gray;
-    margin: 15px;
+    margin: 5px;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
