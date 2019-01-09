@@ -152,7 +152,7 @@
     text-align: left;
     font-weight: bold;
     margin-left: 50px;
-    margin-right: 50px;
+    margin-right: 60px;
 }
 
 .form_addconference > textarea {
@@ -166,4 +166,8 @@
     width: 1650px;
     resize: none;
     display: block;
+}
+
+.conferentiedetails > input {
+    width: 130px;
 }
