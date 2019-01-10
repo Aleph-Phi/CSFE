@@ -29,7 +29,7 @@
                   margin-top: 10px;
                   display: inline-block;   
         }
-          textarea {
+          textarea, input {
                   border-radius: 5px;
                   border: 2px solid white;
                   background-color: rgb(202, 202, 202);
@@ -42,6 +42,8 @@
                   display: inline-block;
                   resize: none;
               }
+
+            
           button {
               border: 2px solid gray;
               margin: 15px;
@@ -78,7 +80,7 @@
             <p>host:</p><textarea id="host"> </textarea>
             <p>port:</p> <textarea id="port">  </textarea><br>
             <p>username:</p><textarea id="username">  </textarea>
-            <p>password:</p><textarea id="password">  </textarea><br>
+            <p>password:</p><input type="password" size="20"  name="myPassword" id="password"/>
 
             <button onclick=sendemailconfig()>Verstuur gegevens</button>
     </div> 

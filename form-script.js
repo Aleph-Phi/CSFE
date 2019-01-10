@@ -1,7 +1,7 @@
 function postForm() {
+    var conference = localStorage.conferenceID;
     let xhreq = new XMLHttpRequest();
-
-    xhreq.open("POST",SERVER+PORT+"/api/presentationdraft",true);
+    xhreq.open("POST",SERVER+PORT+"/api/conference/"+conference+"/savepresentationdraft",true);
     xhreq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
     var subject = document.getElementById("form_subject").value;
@@ -31,7 +31,7 @@ function postForm() {
 
     var presentationDraftApplicant = { "presentationDraft": { "subject":subject, "summary":summary, "type":type, "category":category, "duration":duration },
                                       "applicants": applicants };
-
+                                      
     xhreq.send(JSON.stringify(presentationDraftApplicant));
     alert("Bedankt voor je aanmelding!");
 }
@@ -70,3 +70,28 @@ function addCoHost() {               // Toont extra velden voor naam en e-mail v
         document.getElementById("extra").appendChild(field2);
     }
 }
+
+function fillCategoriesInForm(){
+    
+    let conf_id = localStorage.conferenceID;                                                                                // onload body
+    var dropdown = document.getElementById("form_category");
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET",SERVER+PORT+"/api/conference/"+conf_id,true);
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            currentList = JSON.parse(this.responseText);
+            var categories = currentList.categories;
+            for(i=0; i<categories.length; i++){
+                var optie = document.createElement("option");
+                optie.setAttribute("value", categories[i]);
+                optie.innerText = categories[i];
+                dropdown.appendChild(optie);
+                //console.log("test: " + optie.innerText + " is toegevoegd aan dropdown.");
+            }
+        }
+    }
+    xhr.send();
+
+}
+
